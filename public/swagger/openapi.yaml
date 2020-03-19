@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: LarAPI
+  version: '1.0'
+paths:
+  /v1/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: 'Gets a JWT via given credentials'
+      description: 'Logs in a user and gets the JWT token'
+      operationId: 'LarAPI\Auth\Controllers\AuthController::login'
+      requestBody:
+        description: 'User credentials'
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  description: 'Gets a JWT via given credentials'
+                  type: string
+                password:
+                  description: 'Gets a JWT via given credentials'
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: 'The JWT Token'
+          content:
+            application/json:
+              schema:
+                properties:
+                  access_token: { description: 'The JWT Token', type: string }
+                  token_type: { description: 'The Token type', type: string }
+                  expires_in: { description: 'The value in seconds for the token to expire', type: integer }
+                type: object
+        '401':
+          description: Unauthorized
+  /v1/auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: 'Invalidates the token'
+      description: 'Logs out a user and invalidates the JWT token'
+      operationId: 'LarAPI\Auth\Controllers\AuthController::logout'
+      responses:
+        '200':
+          description: 'Logout message'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { description: 'Invalidates the token', type: string }
+                type: object
+        '401':
+          description: Unauthorized
+      security:
+        jwt: []
+  /v1/auth/refresh:
+    post:
+      tags:
+        - Auth
+      summary: 'Refreshes a token'
+      description: 'Refresh the JWT Token, invalidating the old one and generating a new one'
+      operationId: 'LarAPI\Auth\Controllers\AuthController::refresh'
+      responses:
+        '200':
+          description: 'The new JWT Token'
+          content:
+            application/json:
+              schema:
+                properties:
+                  access_token: { description: 'The JWT Token', type: string }
+                  token_type: { description: 'The Token type', type: string }
+                  expires_in: { description: 'The value in seconds for the token to expire', type: integer }
+                type: object
+        '401':
+          description: Unauthorized
+      security:
+        jwt: []
+  /v1/auth/me:
+    get:
+      tags:
+        - Auth
+      summary: 'Gets the authenticated user'
+      description: 'Gets the logged User'
+      operationId: 'LarAPI\Auth\Controllers\AuthController::me'
+      responses:
+        '200':
+          description: 'The logged in info'
+          content:
+            application/json:
+              schema:
+                properties:
+                  user: { description: 'Logged in user', properties: { id: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, email_verified_at: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: integer }, role_id: { description: 'Gets the authenticated user', type: integer }, last_login: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean } }, type: object }
+                type: object
+        '401':
+          description: Unauthorized
+      security:
+        jwt: []
+components:
+  securitySchemes:
+    jwt:
+      type: http
+      name: jwt
+      in: header
+      bearerFormat: JWT
+      scheme: bearer
