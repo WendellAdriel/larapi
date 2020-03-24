@@ -2,6 +2,9 @@
 
 namespace LarAPI\Auth\Services;
 
+use Carbon\Carbon;
+use LarAPI\Repositories\Auth\UserRepository;
+
 class AuthService
 {
     const UNAUTHORIZED_MSG = 'Unauthorized';
@@ -19,7 +22,10 @@ class AuthService
             return null;
         }
 
-        // DO ANY CUSTOM LOGIC HERE
+        $user = $this->userRepository->getBy('email', $credentials['email']);
+
+        $user->last_login = new Carbon();
+        $user->save();
 
         return auth()->attempt($credentials);
     }
