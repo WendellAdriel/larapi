@@ -6,6 +6,8 @@ use Throwable;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -16,10 +18,10 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        \Illuminate\Auth\AuthenticationException::class,
+        AuthenticationException::class,
         \Illuminate\Auth\Access\AuthorizationException::class,
         \Symfony\Component\HttpKernel\Exception\HttpException::class,
-        \Illuminate\Database\Eloquent\ModelNotFoundException::class,
+        ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
         \Illuminate\Validation\ValidationException::class,
     ];
@@ -59,9 +61,12 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
-            return response()->json(['message' => 'Resource not found'], 404);
+            return $this->error('Resource not found', Response::HTTP_NOT_FOUND, $exception);
         }
-        return response()->json(['message' => $exception->getMessage()], 500);
+        if ($exception instanceof AuthenticationException) {
+            return $this->error('Unauthenticated', Response::HTTP_UNAUTHORIZED, $exception);
+        }
+        return $this->error($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR, $exception);
     }
 
     /**
@@ -73,6 +78,29 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        return response()->json(['error' => 'Unauthenticated.'], 401);
+        return $this->error('Unauthenticated', Response::HTTP_UNAUTHORIZED, $exception);
+    }
+
+    /**
+     * Builds an error response
+     *
+     * @param string    $message
+     * @param int       $code
+     * @param Throwable $exception
+     * @return JsonResponse
+     */
+    private function error(string $message, int $code, Throwable $exception)
+    {
+        $response = ['message' => $message];
+        if (config('app.debug')) {
+            $response['debug'] = [
+                'message' => $exception->getMessage(),
+                'file'    => $exception->getFile(),
+                'line'    => $exception->getLine(),
+                'trace'   => $exception->getTrace()
+            ];
+        }
+
+        return response()->json($response, $code);
     }
 }

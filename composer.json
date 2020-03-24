@@ -22,6 +22,7 @@
         "zircote/swagger-php": "^3.0"
     },
     "require-dev": {
+        "brainmaestro/composer-git-hooks": "^2.8",
         "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.9.1",
         "mockery/mockery": "^1.3.1",
@@ -36,6 +37,25 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "hooks": {
+            "pre-commit": [
+                "echo Commiting as $(git config user.name)",
+                "echo Updating API docs...",
+                "sh ./tools/swagger.sh",
+                "echo Linting PHP code...",
+                "php-cs-fixer fix ./app",
+                "echo Updating files to commit...",
+                "git add ./app ./public/swagger",
+                "echo DONE! Proceeding to commit!"
+            ],
+            "pre-push": [
+                "echo Checking PHP code...",
+                "php-cs-fixer fix --dry-run ./app",
+                "echo Running Tests...",
+                "./vendor/bin/phpunit",
+                "echo DONE! Proceeding to push!"
+            ]
         }
     },
     "autoload": {

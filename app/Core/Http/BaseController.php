@@ -12,7 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BaseController extends LaravelController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     /**
      * Builds and sends a success API response

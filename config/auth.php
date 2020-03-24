@@ -62,7 +62,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model'  => LarAPI\Models\Common\User::class,
+            'model'  => LarAPI\Models\Auth\User::class,
         ],
     ],
 

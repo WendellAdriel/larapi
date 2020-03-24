@@ -1,6 +1,6 @@
 <?php
 
-namespace LarAPI\Models\Common;
+namespace LarAPI\Models\Auth;
 
 use Illuminate\Database\Eloquent\Model;
 

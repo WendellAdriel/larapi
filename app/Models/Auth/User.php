@@ -1,18 +1,18 @@
 <?php
 
-namespace LarAPI\Models\Common;
+namespace LarAPI\Models\Auth;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-use LarAPI\Support\Traits\HasUuid;
+use LarAPI\Models\Traits\HasUuid;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
     use HasUuid;
+    use Notifiable;
 
     protected $fillable = ['name', 'email', 'password'];
     protected $hidden   = ['password', 'remember_token'];

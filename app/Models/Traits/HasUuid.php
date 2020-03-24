@@ -1,6 +1,6 @@
 <?php
 
-namespace LarAPI\Support\Traits;
+namespace LarAPI\Models\Traits;
 
 use Illuminate\Support\Str;
 

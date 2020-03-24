@@ -5,7 +5,7 @@
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
-use LarAPI\Models\Common\User;
+use LarAPI\Models\Auth\User;
 /*
 |--------------------------------------------------------------------------
 | Model Factories

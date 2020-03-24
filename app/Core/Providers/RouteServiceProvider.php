@@ -41,7 +41,11 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         Route::get('/', function () {
-            return response()->json(['application' => 'LarAPI', 'status' => 200]);
+            return response()->json([
+                'application' => config('app.name'),
+                'environment' => config('app.env'),
+                'status'      => 200
+            ]);
         })->name('login');
 
         $this->mapV1Routes();
