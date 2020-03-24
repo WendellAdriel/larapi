@@ -2,7 +2,8 @@
 
 namespace LarAPI\Auth\Controllers;
 
-use Illuminate\Http\{ Request, JsonResponse };
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use LarAPI\Core\Http\BaseController;

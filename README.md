@@ -55,12 +55,12 @@ Inside the `app` folder will live only other folders, no files are allowed in th
 - Traits for model specific Traits;
 - Relations for custom relationship classes;
 
-`Repositories`: All the application Repository classes are placed here, but no classes are allowed in the root of the directory. All repositories should be put into a namespace depending on its purpose, besides that, there is a `Traits` folder for repository specific Traits. If you create a Repository for a specific Model class, use the same namespace you gave to the Model class, per example the `Models\Auth\User` repository **MUST** be `Repositories\Auth\UserRepository`. **ALWAYS** put the suffix `Repository`.
+`Repositories`: All the application Repository classes are placed here, but no classes are allowed in the root of the directory. All repositories should be put into a namespace depending on its purpose, besides that, there is a `Traits` folder for repository specific Traits. If you create a Repository for a specific Model class, use the same namespace you gave to the Model class, per example the `Models\Auth\User` repository **MUST** be `Repositories\Auth\UserRepository`. **ALWAYS** put the suffix `Repository`. All repositories **MUST** extend `LarAPI\Core\Repositories\BaseRepository`
 
 `Common`: This is a **Module Folder** (all module folders **MUST HAVE** the same folder and file structure) created to have **ONLY** common and general purpose classes:
 
 - **Commands:** Command files for this module;
-- **Controllers:** Controller files for this module. **DON'T** use the name in the plural form and **ALWAYS** put the suffix `Controller`. Example: `UserController`, `ProductController`;
+- **Controllers:** Controller files for this module. **DON'T** use the name in the plural form and **ALWAYS** put the suffix `Controller`. Example: `UserController`, `ProductController`. All controllers **MUST** extend `LarAPI\Core\Http\BaseController`;
 - **Events:** Event files for this module. Try to use verbs for the name and **ALWAYS** put the suffix `Event`. Example: `ActivateUserEvent`;
 - **Listeners:** Listener files for this module. Try to use nouns for the name and **ALWAYS** put the suffix `Listener`. Example: for the `ActivateUserEvent` use `UserActivatedListener`;
 - **Requests:** Custom request files for this module.Try to use verbs for the name and **ALWAYS** put the suffix `Request`. Example: `ActivateUserRequest`;
@@ -72,5 +72,9 @@ Inside the `app` folder will live only other folders, no files are allowed in th
 ## Development Standards
 
 - **Controllers:** Only handle requests and return responses;
+
 - **Repositories:** Only place where database access should be done;
+
 - **Services:** Handle business logic;
+
+- **DON'T** forget to document all API endpoints with the OpenAPI annotations;
