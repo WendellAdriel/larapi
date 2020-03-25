@@ -64,11 +64,12 @@ Inside the `app` folder will live only other folders, no files are allowed in th
 - **Listeners:** Listener files for this module. Try to use nouns for the name and **ALWAYS** put the suffix `Listener`. Example: for the `ActivateUserEvent` use `UserActivatedListener`;
 - **Requests:** Custom request files for this module.Try to use verbs for the name and **ALWAYS** put the suffix `Request`. Example: `ActivateUserRequest`;
 - **Responses:** Custom response files for this module. Try to use nouns for the name and **ALWAYS** put the suffix `Response`. Example: `UserActivatedResponse`;
+- **Routing:** Route files for this module. Each file is a version of the API. Follow the format: `v1.php`, `v2.php`, etc;
 - **Services:** Service files for this module. **ALWAYS** put the suffix `Service`;
 - **Support:** Helper files for this module;
 - **Traits:** Trait files for this module;
 
-When you create a new **Module** in the app folder, add the module name to the `config/modules.php` file.
+When you create a new **Module** in the app folder, add the module name to the `config/modules.php` file. This configuration file is also used to enable and disable modules in your API. The modules listed there will be the enabled ones.
 
 ## Development Standards
 
