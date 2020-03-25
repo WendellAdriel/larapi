@@ -69,6 +69,8 @@ Inside the `app` folder will live only other folders, no files are allowed in th
 - **Support:** Helper files for this module;
 - **Traits:** Trait files for this module;
 
+When you create a new **Module** in the app folder, add the module name to the `config/modules.php` file.
+
 ## Development Standards
 
 - **Controllers:** Only handle requests and return responses;
