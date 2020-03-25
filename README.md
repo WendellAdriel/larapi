@@ -5,7 +5,7 @@ Opinated API Skeleton created with Laravel
 ## Configuring the project
 
 ```
-composer create-project --prefer-dist wendelladriel/larapi my-app
+composer create-project --prefer-dist wendelladriel/larapi my-app && cd my-app && sh ./tools/configure.sh
 ```
 
 This will:
