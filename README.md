@@ -4,13 +4,12 @@ Opinated API Skeleton created with Laravel
 
 ## Configuring the project
 
-Clone this repository and run the configure script:
-
 ```
-git clone git@github.com:WendellAdriel/larapi.git && cd larapi && sh ./tools/configure.sh
+composer create-project --prefer-dist wendelladriel/larapi my-app
 ```
 
-The script will:
+This will:
+- Create the project
 - Install the dependencies
 - Copy the `.env.example` to `.env` in the project root;
 - Generate the `APP_KEY`

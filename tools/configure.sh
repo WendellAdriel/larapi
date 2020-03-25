@@ -1,12 +1,8 @@
 #!/bin/bash
 
-echo "INSTALLING DEPENDENCIES..."
-composer install
-clear
-echo "DEPENDENCIES INSTALLED!"
 echo "CONFIGURING LARAPI..."
 cp .env.example .env
-php artisan key:generate
+php artisan key:generate --ansi
 php artisan jwt:secret
 composer global require friendsofphp/php-cs-fixer
 clear
