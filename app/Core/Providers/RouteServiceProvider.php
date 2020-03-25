@@ -58,9 +58,13 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapV1Routes()
     {
-        Route::prefix('v1')
-            ->middleware('api')
-            ->namespace($this->namespace)
-            ->group(base_path('routes/v1.php'));
+        $modules = config('modules');
+
+        foreach ($modules as $module) {
+            Route::prefix('v1')
+                ->middleware('api')
+                ->namespace("LarAPI\\{$module}\\Controllers")
+                ->group(base_path("app/{$module}/Routing/v1.php"));
+        }
     }
 }
