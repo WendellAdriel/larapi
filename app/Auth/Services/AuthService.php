@@ -10,6 +10,19 @@ class AuthService
     const UNAUTHORIZED_MSG = 'Unauthorized';
     const LOGOUT_MSG       = 'Successfully logged out';
 
+    /** @var UserRepository */
+    private $userRepository;
+
+    /**
+     * AuthService constructor
+     *
+     * @param UserRepository $userRepository
+     */
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Gets the JWT API Token for the given credentials
      *
