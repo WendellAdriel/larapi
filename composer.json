@@ -34,6 +34,7 @@
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.8",
         "facade/ignition": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.16",
         "fzaninotto/faker": "^1.9.1",
         "mockery/mockery": "^1.3.1",
         "nunomaduro/collision": "^4.1",
@@ -54,14 +55,14 @@
                 "echo Updating API docs...",
                 "sh ./tools/swagger.sh",
                 "echo Linting PHP code...",
-                "php-cs-fixer fix ./app",
+                "./vendor/bin/php-cs-fixer fix ./app",
                 "echo Updating files to commit...",
                 "git add ./app ./public/swagger",
                 "echo DONE! Proceeding to commit!"
             ],
             "pre-push": [
                 "echo Checking PHP code...",
-                "php-cs-fixer fix --dry-run ./app",
+                "./vendor/bin/php-cs-fixer fix --dry-run ./app",
                 "echo Running Tests...",
                 "./vendor/bin/phpunit",
                 "echo DONE! Proceeding to push!"
@@ -85,9 +86,18 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "post-install-cmd": [
+            "cghooks add --ignore-lock"
+        ],
+        "post-update-cmd": [
+            "cghooks update"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
-        ]
+        ],
+        "cghooks": "./vendor/bin/cghooks",
+        "lint": "./vendor/bin/php-cs-fixer fix ./app",
+        "tests": "./vendor/bin/phpunit"
     }
 }
