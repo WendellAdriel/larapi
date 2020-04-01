@@ -64,7 +64,7 @@
                 "echo Checking PHP code...",
                 "./vendor/bin/php-cs-fixer fix --dry-run ./app",
                 "echo Running Tests...",
-                "./vendor/bin/phpunit",
+                "php artisan test",
                 "echo DONE! Proceeding to push!"
             ]
         }
@@ -98,6 +98,6 @@
         ],
         "cghooks": "./vendor/bin/cghooks",
         "lint": "./vendor/bin/php-cs-fixer fix ./app",
-        "tests": "./vendor/bin/phpunit"
+        "tests": "php artisan test"
     }
 }
