@@ -1,6 +1,6 @@
 # LARAPI
 
-Opinated API Skeleton created with Laravel
+Opinionated API Skeleton created with Laravel
 
 ## Configuring the project
 
