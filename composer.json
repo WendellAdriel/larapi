@@ -51,7 +51,7 @@
         },
         "hooks": {
             "pre-commit": [
-                "echo Commiting as $(git config user.name)",
+                "echo Committing as $(git config user.name)",
                 "echo Updating API docs...",
                 "sh ./tools/swagger.sh",
                 "echo Linting PHP code...",
