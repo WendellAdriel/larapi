@@ -83,3 +83,16 @@ When you create a new **Module** in the app folder, add the module name to the `
 - Don't bypass the Git Hooks. The Git Hooks that are set up are going to lint the PHP code and also run the PHP tests before commit and push, but you can also run before the commit these commands: `composer lint` to run the PHP linter and `composer tests` to run the tests. If any of these show errors for you, please fix them before committing and pushing your code;
 
 - Don't pass the request object or an array for the service layer, create a DTO with the needed data. You can extend from the `LarAPI\Common\Support\DTOs\CommonDTO`. If it's a common DTO that will be used by multiple modules, create it inside `app/Common/Support/DTOs`. If it's something specific to a module create it on `app/MODULE/Support/DTOs`
+
+- Whenever you need to do a simple query with many where clauses, you can use some of the new methods added in BaseRepository. See some examples below:
+```
+$params = [
+    ['atribute', 'value', 'compareType'],
+    ['atribute2', 'value2']
+];
+
+
+$this->commonRepository->getFirstByParams($params);
+$this->commonRepository->getFirstOrFailByParams($params);
+$this->commonRepository->getAllByParams($params);
+```
