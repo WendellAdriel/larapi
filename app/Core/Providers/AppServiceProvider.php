@@ -3,6 +3,7 @@
 namespace LarAPI\Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use LarAPI\Common\Services\SlackClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->registerSlackClient();
     }
 
     /**
@@ -24,5 +25,23 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+    }
+
+    /**
+     * Register Slack Client
+     */
+    private function registerSlackClient()
+    {
+        $webhook = config('services.slack.webhook');
+        if (!\is_null($webhook)) {
+            $this->app->bind(SlackClient::class, function () use ($webhook) {
+                return new SlackClient(
+                    config('services.slack.bot.name'),
+                    config('services.slack.bot.icon'),
+                    $webhook,
+                    config('services.slack.channels.default')
+                );
+            });
+        }
     }
 }

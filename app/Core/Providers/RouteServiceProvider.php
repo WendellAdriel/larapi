@@ -40,6 +40,27 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        /**
+         * Health check route
+         *
+         * @OA\Get(
+         *      tags={"Health Check"},
+         *      path="/",
+         *      description="Returns the application name, environment and status of the API",
+         *
+         *      @OA\Response(response="200", description="API info",
+         *          @OA\MediaType(mediaType="application/json",
+         *              @OA\Schema(type="object",
+         *                  @OA\Property(property="data", type="object",
+         *                      @OA\Property(property="application", type="string"),
+         *                      @OA\Property(property="environment", type="string"),
+         *                      @OA\Property(property="status", type="integer"),
+         *                  ),
+         *              ),
+         *          ),
+         *      ),
+         *  )
+         */
         Route::get('/', function () {
             return response()->json([
                 'application' => config('app.name'),

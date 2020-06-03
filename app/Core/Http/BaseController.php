@@ -3,6 +3,7 @@
 namespace LarAPI\Core\Http;
 
 use Throwable;
+
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -15,6 +16,17 @@ class BaseController extends LaravelController
     use AuthorizesRequests;
     use DispatchesJobs;
     use ValidatesRequests;
+
+    /**
+     * Builds and sends a simple success API response
+     *
+     * @param int $code
+     * @return JsonResponse
+     */
+    protected function apiSimpleSuccessResponse(int $code = Response::HTTP_CREATED): JsonResponse
+    {
+        return response()->json(['success' => true], $code);
+    }
 
     /**
      * Builds and sends a success API response

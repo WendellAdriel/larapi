@@ -2,8 +2,10 @@
 
 namespace LarAPI\Auth\Controllers;
 
-use Illuminate\Http\Request;
+use Throwable;
+
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use LarAPI\Core\Http\BaseController;
@@ -99,7 +101,7 @@ class AuthController extends BaseController
      */
     public function logout(): JsonResponse
     {
-        auth()->logout();
+        Auth::logout();
         return $this->apiSuccessResponse(['message' => AuthService::LOGOUT_MSG]);
     }
 
@@ -145,55 +147,10 @@ class AuthController extends BaseController
     public function refresh(): JsonResponse
     {
         try {
-            return $this->respondWithToken(auth()->refresh());
-        } catch (\Exception $exception) {
+            return $this->respondWithToken(Auth::refresh());
+        } catch (Throwable $exception) {
             return $this->apiErrorResponse(AuthService::UNAUTHORIZED_MSG, null, SymfonyResponse::HTTP_UNAUTHORIZED);
         }
-    }
-
-    /**
-     * Gets the authenticated user
-     *
-     * @OA\Get(
-     *      tags={"Auth"},
-     *      path="/v1/auth/me",
-     *      description="Gets the logged User",
-     *      security={ "jwt": {} },
-     *
-     *      @OA\Response(
-     *          response="200",
-     *          description="The logged in info",
-     *          @OA\MediaType(
-     *              mediaType="application/json",
-     *              @OA\Schema(
-     *                  type="object",
-     *                  @OA\Property(
-     *                      property="user",
-     *                      type="object",
-     *                      description="Logged in user",
-     *                      @OA\Property(property="id", type="string"),
-     *                      @OA\Property(property="name", type="string"),
-     *                      @OA\Property(property="email", type="string"),
-     *                      @OA\Property(property="email_verified_at", type="string"),
-     *                      @OA\Property(property="active", type="integer"),
-     *                      @OA\Property(property="role_id", type="integer"),
-     *                      @OA\Property(property="last_login", type="string"),
-     *                      @OA\Property(property="created_at", type="string"),
-     *                      @OA\Property(property="updated_at", type="string"),
-     *                      @OA\Property(property="is_admin", type="boolean"),
-     *                      @OA\Property(property="is_manager", type="boolean"),
-     *                  ),
-     *              ),
-     *          ),
-     *      ),
-     *      @OA\Response(response="401", description="Unauthorized"),
-     * )
-     *
-     * @return JsonResponse
-     */
-    public function me(): JsonResponse
-    {
-        return $this->apiSuccessResponse(auth()->user());
     }
 
     /**
@@ -207,7 +164,7 @@ class AuthController extends BaseController
         return $this->apiSuccessResponse([
             'access_token' => $token,
             'token_type'   => 'bearer',
-            'expires_in'   => auth()->factory()->getTTL() * 60
+            'expires_in'   => Auth::factory()->getTTL() * 60
         ]);
     }
 }

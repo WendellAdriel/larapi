@@ -4,18 +4,17 @@ namespace LarAPI\Common\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use LarAPI\Common\Requests\Traits\HasFormat;
-use LarAPI\Common\Support\DTOs\CommonDTO;
+use LarAPI\Common\Support\DTOs\CommonTableDTO;
 use LarAPI\Common\Support\DTOs\DTOInterface;
+use LarAPI\Common\Support\Formatter;
 
-class CommonRequest extends FormRequest
+class CommonTableRequest extends FormRequest
 {
-    use HasFormat;
-
     protected const PAGE     = 'page';
     protected const PER_PAGE = 'per_page';
     protected const SORT     = 'sort';
     protected const SEARCH   = 'search';
+    protected const FORMAT   = 'format';
 
     /**
      * @return array
@@ -35,7 +34,7 @@ class CommonRequest extends FormRequest
      */
     public function page(): int
     {
-        return (int) $this->input(self::PAGE, DTOInterface::DEFAULT_PAGE);
+        return (int) $this->input(self::PAGE, CommonTableDTO::DEFAULT_PAGE);
     }
 
     /**
@@ -43,9 +42,9 @@ class CommonRequest extends FormRequest
      */
     public function perPage()
     {
-        return $this->format() === 'json'
-            ? (int) $this->input(self::PER_PAGE, DTOInterface::DEFAULT_PER_PAGE)
-            : 'all'; // Exports should be based on the entire result set
+        return $this->format() === CommonTableDTO::FORMAT_JSON
+            ? (int) $this->input(self::PER_PAGE, CommonTableDTO::DEFAULT_PER_PAGE)
+            : CommonTableDTO::PER_PAGE_ALL; // Exports should be based on the entire result set
     }
 
     /**
@@ -71,16 +70,34 @@ class CommonRequest extends FormRequest
     }
 
     /**
+     * @param string $default
+     * @return string
+     */
+    public function format($default = DTOInterface::FORMAT_JSON): string
+    {
+        $format = $this->route()->parameter(self::FORMAT, $default);
+        return \ltrim($format, '.');
+    }
+
+    /**
      * @return DTOInterface
      */
     public function getDTO(): DTOInterface
     {
-        $dto = new CommonDTO();
+        $dto = new CommonTableDTO();
 
         return $dto->setPage($this->page())
             ->setPerPage($this->perPage())
             ->setSort($this->sort())
             ->setSearch($this->search())
             ->setFormat($this->format());
+    }
+
+    /**
+     * @return Formatter
+     */
+    protected function formatter(): Formatter
+    {
+        return new Formatter();
     }
 }

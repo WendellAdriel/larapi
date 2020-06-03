@@ -81,10 +81,10 @@ paths:
   /v1/auth/me:
     get:
       tags:
-        - Auth
+        - 'Logged User Info'
       summary: 'Gets the authenticated user'
       description: 'Gets the logged User'
-      operationId: 'LarAPI\Auth\Controllers\AuthController::me'
+      operationId: 'LarAPI\Auth\Controllers\UserController::index'
       responses:
         '200':
           description: 'The logged in info'
@@ -92,12 +92,27 @@ paths:
             application/json:
               schema:
                 properties:
-                  user: { description: 'Logged in user', properties: { id: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, email_verified_at: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: integer }, role_id: { description: 'Gets the authenticated user', type: integer }, last_login: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean } }, type: object }
+                  user: { description: 'Logged in user', properties: { id: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, email_verified_at: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: integer }, role_id: { description: 'Gets the authenticated user', type: integer }, last_login: { description: 'Gets the authenticated user', type: string }, settings: { description: 'Gets the authenticated user', type: object }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean } }, type: object }
                 type: object
         '401':
           description: Unauthorized
       security:
         jwt: []
+  /:
+    get:
+      tags:
+        - 'Health Check'
+      summary: 'Health check route'
+      description: 'Returns the application name, environment and status of the API'
+      responses:
+        '200':
+          description: 'API info'
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: { description: 'Health check route', properties: { application: { description: 'Health check route', type: string }, environment: { description: 'Health check route', type: string }, status: { description: 'Health check route', type: integer } }, type: object }
+                type: object
 components:
   securitySchemes:
     jwt:
