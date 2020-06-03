@@ -25,10 +25,7 @@ abstract class BaseRepository
      */
     public function getAllBy(string $attribute, $value, string $compareType = '='): Collection
     {
-        return $this->getModel()
-            ->query()
-            ->where($attribute, $compareType, $value)
-            ->get();
+        return $this->getByParamsBase([[$attribute, $value, $compareType]])->get();
     }
 
     /**
@@ -41,9 +38,7 @@ abstract class BaseRepository
      */
     public function getBy(string $attribute, $value, string $compareType = '='): ?Model
     {
-        return $this->getModel()
-            ->where($attribute, $compareType, $value)
-            ->first();
+        return $this->getByParamsBase([[$attribute, $value, $compareType]])->first();
     }
 
     /**
@@ -56,9 +51,7 @@ abstract class BaseRepository
      */
     public function getByOrFail(string $attribute, $value, string $compareType = '='): Model
     {
-        return $this->getModel()
-            ->where($attribute, $compareType, $value)
-            ->firstOrFail();
+        return $this->getByParamsBase([[$attribute, $value, $compareType]])->firstOrFail();
     }
 
     /**
@@ -69,5 +62,57 @@ abstract class BaseRepository
     protected function getTable(): string
     {
         return $this->getModel()->getTable();
+    }
+
+    /**
+     * Gets a model by some given attributes
+     *
+     * @param array $params
+     * @param string $compareType
+     * @return mixed
+     */
+    public function getFirstByParams(array $params, string $compareType = '='): ?Model
+    {
+        return $this->getByParamsBase($params, $compareType)->first();
+    }
+
+    /**
+     * Gets a model by some attributes or throws an exception
+     *
+     * @param array $params
+     * @param string $compareType
+     * @return mixed
+     */
+    public function getFirstOrFailByParams(array $params, string $compareType = '='): Model
+    {
+        return $this->getByParamsBase($params, $compareType)->firstOrFail();
+    }
+
+    /**
+     * Gets all models by some given attributes
+     *
+     * @param array $params
+     * @param string $compareType
+     * @return mixed
+     */
+    public function getAllByParams(array $params, string $compareType = '='): Collection
+    {
+        return $this->getByParamsBase($params, $compareType)->get();
+    }
+
+    /**
+     * Build a query base
+     *
+     * @param array $params
+     * @return Model
+     */
+    private function getByParamsBase(array $params)
+    {
+        $query = $this->getModel();
+        foreach ($params as $param) {
+            $compareType = \count($param) === 2 ? '=' : $param[2];
+            $query = $query->where($param[0], $compareType, $param[1]);
+        }
+        return $query;
     }
 }
