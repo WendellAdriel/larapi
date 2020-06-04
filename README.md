@@ -169,6 +169,12 @@ The project has some Git Hooks to update the API documentation using **Swagger**
 
 ### Module Management
 
+You can use the following command to create a new module in your API:
+
+```
+php artisan make:module test
+```
+
 Using the `config/modules.php` file you can enable and disable modules of your API.
 
 ### Requests
