@@ -55,7 +55,7 @@ paths:
         '401':
           description: Unauthorized
       security:
-        jwt: []
+        jwt: {  }
   /v1/auth/refresh:
     post:
       tags:
@@ -77,7 +77,7 @@ paths:
         '401':
           description: Unauthorized
       security:
-        jwt: []
+        jwt: {  }
   /v1/auth/me:
     get:
       tags:
@@ -97,7 +97,7 @@ paths:
         '401':
           description: Unauthorized
       security:
-        jwt: []
+        jwt: {  }
   /:
     get:
       tags:
