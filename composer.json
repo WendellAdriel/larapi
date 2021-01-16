@@ -17,11 +17,11 @@
     "authors": [
         {
             "name": "Wendell Adriel",
-            "email": "wendelladriel.ti@gmail.com"
+            "email": "contact@wendelladriel.com"
         }
     ],
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.4",
         "ext-json": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
@@ -52,21 +52,10 @@
         },
         "hooks": {
             "pre-commit": [
-                "echo Committing as $(git config user.name)",
-                "echo Updating API docs...",
-                "sh ./tools/swagger.sh",
-                "echo Linting PHP code...",
-                "./vendor/bin/php-cs-fixer fix ./app --using-cache=false --rules=@PSR2",
-                "echo Updating files to commit...",
-                "git add ./app ./public/swagger",
-                "echo DONE! Proceeding to commit!"
+                "sh ./tools/precommit.sh"
             ],
             "pre-push": [
-                "echo Checking PHP code...",
-                "./vendor/bin/php-cs-fixer fix ./app --using-cache=false --dry-run --rules=@PSR2",
-                "echo Running Tests...",
-                "php artisan test --do-not-cache-result",
-                "echo DONE! Proceeding to push!"
+                "sh ./tools/prepush.sh"
             ]
         }
     },
