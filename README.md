@@ -16,7 +16,9 @@ This will:
 - Generate the `JWT_SECRET`
 - Configures the **Git Hooks** for the project;
 
-Update your `.env` file:
+Update your `.env` file as needed;
+
+Run the migrations;
 
 Configure your local Virtual Host. After that visit the host URL and you will see a JSON response like below:
 

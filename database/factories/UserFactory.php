@@ -1,11 +1,10 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use Faker\Generator as Faker;
-use Illuminate\Support\Str;
-
 use LarAPI\Models\Auth\User;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -16,7 +15,7 @@ use LarAPI\Models\Auth\User;
 | model instances for testing / seeding your application's database.
 |
 */
-
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(User::class, function (Faker $faker) {
     return [
         'name'              => $faker->name,
