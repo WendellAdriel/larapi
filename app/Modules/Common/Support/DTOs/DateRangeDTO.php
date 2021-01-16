@@ -1,16 +1,17 @@
 <?php
 
-namespace LarAPI\Common\Support\DTOs;
+namespace LarAPI\Modules\Common\Support\DTOs;
 
 use Illuminate\Support\Carbon;
-use LarAPI\Common\Support\Formatter;
+use LarAPI\Modules\Common\Support\Formatter;
 
 class DateRangeDTO extends CommonTableDTO
 {
-    /** @var Carbon|null */
-    private $from;
-    /** @var Carbon|null */
-    private $to;
+    public const START_DATE = 'from';
+    public const END_DATE   = 'to';
+
+    private ?Carbon $from;
+    private ?Carbon $to;
 
     /**
      * @return Carbon|null
@@ -69,11 +70,11 @@ class DateRangeDTO extends CommonTableDTO
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            'from' => $this->getStringFrom(),
-            'to'   => $this->getStringTo()
+            self::START_DATE => $this->getStringFrom(),
+            self::END_DATE   => $this->getStringTo()
         ]);
     }
 }

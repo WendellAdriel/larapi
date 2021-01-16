@@ -1,15 +1,13 @@
 <?php
 
-namespace LarAPI\Auth\Controllers;
-
-use Throwable;
+namespace LarAPI\Modules\Auth\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-
+use LarAPI\Modules\Auth\Services\AuthService;
 use LarAPI\Core\Http\BaseController;
-use LarAPI\Auth\Services\AuthService;
+use Throwable;
 
 class AuthController extends BaseController
 {
@@ -68,7 +66,7 @@ class AuthController extends BaseController
     {
         $credentials = request(['email', 'password']);
         if (!$token = $authService->getAPIToken($credentials)) {
-            return $this->apiErrorResponse(AuthService::UNAUTHORIZED_MSG, null, SymfonyResponse::HTTP_UNAUTHORIZED);
+            return $this->apiErrorResponse(AuthService::UNAUTHORIZED_MSG, null, Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);
@@ -149,7 +147,7 @@ class AuthController extends BaseController
         try {
             return $this->respondWithToken(Auth::refresh());
         } catch (Throwable $exception) {
-            return $this->apiErrorResponse(AuthService::UNAUTHORIZED_MSG, null, SymfonyResponse::HTTP_UNAUTHORIZED);
+            return $this->apiErrorResponse(AuthService::UNAUTHORIZED_MSG, null, Response::HTTP_UNAUTHORIZED);
         }
     }
 

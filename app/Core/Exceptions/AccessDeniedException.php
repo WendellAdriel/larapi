@@ -3,7 +3,7 @@
 namespace LarAPI\Core\Exceptions;
 
 use Exception;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
 
 class AccessDeniedException extends Exception implements LarAPIExceptionInterface
 {

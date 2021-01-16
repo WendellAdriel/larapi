@@ -4,11 +4,12 @@ namespace LarAPI\Core\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Enumerable;
 
 abstract class BaseRepository
 {
-    public const COMPARE_DEFAULT = '=';
-    public const ALL_COLUMNS     = ['*'];
+    public const ALL_COLUMNS = ['*'];
 
     /**
      * Gets the base model for the repository
@@ -18,93 +19,133 @@ abstract class BaseRepository
     abstract public function getModel(): Model;
 
     /**
-     * Builds a new query
-     *
-     * @param array $columns
-     * @return Builder
-     */
-    public function newQuery(array $columns = self::ALL_COLUMNS): Builder
-    {
-        return $this->getModel()
-            ->newQuery()
-            ->select($columns);
-    }
-
-    /**
-     * Gets builder by attribute
+     * Gets all models by the given attribute
      *
      * @param string $attribute
      * @param mixed  $value
      * @param string $compareType
-     * @param array  $columns
-     * @return Builder
+     * @return Collection
      */
-    public function getBy(
-        string $attribute,
-        $value,
-        string $compareType = self::COMPARE_DEFAULT,
-        array $columns = self::ALL_COLUMNS
-    ): Builder {
-        return $this->getByBase([[$attribute, $value, $compareType]], $columns);
-    }
-
-    /**
-     * Gets builder by multiple attributes
-     *
-     * @param array $params
-     * @param array $columns
-     * @return Builder
-     */
-    public function getByParams(array $params, array $columns = self::ALL_COLUMNS): Builder
+    public function getAllBy(string $attribute, $value, string $compareType = '='): Collection
     {
-        return $this->getByBase($params, $columns);
+        return $this->getByParamsBase([[$attribute, $value, $compareType]])->get();
     }
 
     /**
-     * Gets builder by attribute in list of values
+     * Gets a model by the given attribute
      *
      * @param string $attribute
-     * @param array  $values
-     * @param array  $columns
-     * @return Builder
+     * @param mixed  $value
+     * @param string $compareType
+     * @return Model|null
      */
-    public function getByIn(string $attribute, array $values, array $columns = self::ALL_COLUMNS): Builder
+    public function getBy(string $attribute, $value, string $compareType = '='): ?Model
     {
-        return $this->getByInBase([[$attribute, $values]], $columns);
+        return $this->getByParamsBase([[$attribute, $value, $compareType]])->first();
     }
 
     /**
-     * Gets builder by list of attributes in list of values
+     * Gets a model by the given attribute or throws an exception
      *
-     * @param array $params
-     * @param array $columns
-     * @return Builder
+     * @param string $attribute
+     * @param mixed  $value
+     * @param string $compareType
+     * @return Model
      */
-    public function getByParamsIn(array $params, array $columns = self::ALL_COLUMNS): Builder
+    public function getByOrFail(string $attribute, $value, string $compareType = '='): Model
     {
-        return $this->getByInBase($params, $columns);
+        return $this->getByParamsBase([[$attribute, $value, $compareType]])->firstOrFail();
+    }
+
+    /**
+     * Gets a model by some given attributes
+     *
+     * @param array  $params
+     * @param string $compareType
+     * @return Builder|Model|null
+     */
+    public function getByParams(array $params, string $compareType = '=')
+    {
+        return $this->getByParamsBase($params, $compareType)->first();
+    }
+
+    /**
+     * Gets a model by some attributes or throws an exception
+     *
+     * @param array  $params
+     * @param string $compareType
+     * @return Builder|Model
+     */
+    public function getByParamsOrFail(array $params, string $compareType = '=')
+    {
+        return $this->getByParamsBase($params, $compareType)->firstOrFail();
+    }
+
+    /**
+     * Gets all models by some given attributes
+     *
+     * @param array  $params
+     * @param string $compareType
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllByParams(array $params, string $compareType = '=')
+    {
+        return $this->getByParamsBase($params, $compareType)->get();
+    }
+
+    /**
+     * @param string $attribute
+     * @param $value
+     * @param array $updateFields
+     * @return int
+     */
+    public function updateBy(string $attribute, $value, array $updateFields): int
+    {
+        $formattedValue = \is_array($value) || $value instanceof Enumerable ? $value : [$value];
+        return $this->newQuery()
+            ->whereIn($attribute, $formattedValue)
+            ->update($updateFields);
+    }
+
+    /**
+     * @param string $attribute
+     * @param $value
+     * @return mixed
+     */
+    public function deleteBy(string $attribute, $value)
+    {
+        $formattedValue = \is_array($value) || $value instanceof Enumerable ? $value : [$value];
+        return $this->newQuery()
+            ->whereIn($attribute, $formattedValue)
+            ->delete();
+    }
+
+    /**
+     * Create a new model
+     *
+     * @param array $args
+     * @return \Illuminate\Database\Eloquent\Builder|Model
+     */
+    public function create(array $args)
+    {
+        return $this->getModel()->newQuery()->create($args);
     }
 
     /**
      * Gets the table for the base model of the repository
      *
-     * @param string $alias
      * @return string
      */
-    protected function getTable(string $alias = null): string
+    protected function getTable(): string
     {
-        $table = $this->getModel()->getTable();
-        if (\is_null($alias)) {
-            return $table;
-        }
-        return "$table AS $alias";
+        return $this->getModel()->getTable();
     }
 
     /**
-     * Gets the table name of a model
+     * Get table name of a  model
      *
-     * @param Model  $model
-     * @param string $alias
+     * @param Model $model
+     * @param string|null $alias
      * @return string
      */
     protected function getModelTable(Model $model, string $alias = null): string
@@ -117,39 +158,37 @@ abstract class BaseRepository
     }
 
     /**
-     * Builds a base query
+     * Builds a new query
      *
-     * @param array $params
      * @param array $columns
      * @return Builder
      */
-    private function getByBase(array $params, array $columns): Builder
+    protected function newQuery(array $columns = self::ALL_COLUMNS): Builder
     {
-        $query = $this->newQuery($columns);
-
-        foreach ($params as $param) {
-            $compareType = \count($param) === 2 ? self::COMPARE_DEFAULT : $param[2];
-            $query       = $query->where($param[0], $compareType, $param[1]);
-        }
-
-        return $query;
+        return $this->getModel()
+            ->newQuery()
+            ->select($columns);
     }
 
     /**
-     * Builds a base wherein query
+     * Build a query base
      *
-     * @param array $params
-     * @param array $columns
-     * @return Builder
+     * @param array  $params
+     * @param string $defaultCompareType
+     * @return Model|Builder
      */
-    private function getByInBase(array $params, array $columns): Builder
+    private function getByParamsBase(array $params, string $defaultCompareType = '=')
     {
-        $query = $this->newQuery($columns);
-
+        /** @var Builder $query */
+        $query = $this->getModel();
         foreach ($params as $param) {
-            $query->whereIn($param[0], $param[1]);
+            $compareType = count($param) === 2 ? $defaultCompareType : $param[2];
+            if (mb_strtoupper($compareType) === 'IN') {
+                $query = $query->whereIn($param[0], $param[1]);
+            } else {
+                $query = $query->where($param[0], $compareType, $param[1]);
+            }
         }
-
         return $query;
     }
 }

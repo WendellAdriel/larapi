@@ -18,7 +18,11 @@ This will:
 
 Update your `.env` file as needed;
 
-Run the migrations;
+Run the migrations and the seeders:
+
+```
+php artisan migrate && php artisan db:seed
+```
 
 Configure your local Virtual Host. After that visit the host URL and you will see a JSON response like below:
 
@@ -57,8 +61,7 @@ Inside the `app` folder will live only other folders, no files are allowed in th
 - **Controllers:** Controller files for this module. **DON'T** use the name in the plural form and **ALWAYS** put the suffix `Controller`. Example: `UserController`, `ProductController`. All controllers **MUST** extend `LarAPI\Core\Http\BaseController`;
 - **Events:** Event files for this module. Try to use verbs for the name and **ALWAYS** put the suffix `Event`. Example: `ActivateUserEvent`;
 - **Listeners:** Listener files for this module. Try to use nouns for the name and **ALWAYS** put the suffix `Listener`. Example: for the `ActivateUserEvent` use `UserActivatedListener`;
-- **Requests:** Custom request files for this module.Try to use verbs for the name and **ALWAYS** put the suffix `Request`. Example: `ActivateUserRequest`;
-- **resources:** Views (for emails and generated reports per example), i18n files, etc;
+- **Requests:** Custom request files for this module.Try to use verbs for the name and **ALWAYS** put the suffix `Request`. Example: `ActivateUserRequest`. All requests **MUST** extend `LarAPI\Core\Http\BaseRequest`;
 - **Responses:** Custom response files for this module. Try to use nouns for the name and **ALWAYS** put the suffix `Response`. Example: `UserActivatedResponse`;
 - **Routing:** Route files for this module. Each file is a version of the API. Follow the format: `v1.php`, `v2.php`, etc;
 - **Services:** Service files for this module. **ALWAYS** put the suffix `Service`;
@@ -95,7 +98,7 @@ The `LarAPI\Core\Http\BaseController` class provides three helper methods for re
 
 ### DTOs
 
-**LarAPI** provides you two generic DTOs classes that can be useful for requests of datatables.Check out `LarAPI\Common\Support\DTOs\CommonTableDTO` and `LarAPI\Common\Support\DTOs\DateRangeDTO`
+**LarAPI** provides you two generic DTOs classes that can be useful for requests of datatables.Check out `LarAPI\Modules\Common\Support\DTOs\CommonTableDTO` and `LarAPI\Modules\Common\Support\DTOs\DateRangeDTO`
 
 ### Exceptions
 
@@ -103,7 +106,7 @@ The `LarAPI\Core\Http\BaseController` class provides three helper methods for re
 
 ### Formatter
 
-The `LarAPI\Common\Support\Formatter` class provides a lot of functions to format data and helper constants to use within your code.
+The `LarAPI\Modules\Common\Support\Formatter` class provides a lot of functions to format data and helper constants to use within your code.
 
 ### Git Hooks
 
@@ -125,25 +128,11 @@ Using the `config/modules.php` file you can enable and disable modules of your A
 
 ### Requests
 
-**LarAPI** provides you two generic Request classes that can be useful for requests of datatables. Check out `LarAPI\Common\Requests\CommonTableRequest` and `LarAPI\Common\Requests\DateRangeRequest`
+**LarAPI** provides you two generic Request classes that can be useful for requests of datatables. Check out `LarAPI\Modules\Common\Requests\CommonTableRequest` and `LarAPI\Modules\Common\Requests\DateRangeRequest`
 
 ### Repositories
 
 The `LarAPI\Core\Repositories\BaseRepository` class offers a lot of generic purposes util functions, so you don't need to waste time creating functions for simple queries:
-
-- `newQuery(array $columns = self::ALL_COLUMNS): Builder`
-
-- `getBy(string $attribute, $value, string $compareType = self::COMPARE_DEFAULT, array $columns = self::ALL_COLUMNS): Builder`
-
-- `getByParams(array $params, array $columns = self::ALL_COLUMNS): Builder`
-
-- `getByIn(string $attribute, array $values, array $columns = self::ALL_COLUMNS): Builder`
-
-- `getByParamsIn(array $params, array $columns = self::ALL_COLUMNS): Builder`
-
-- `getTable(string $alias = null): string (PROTECTED)`
-
-- `getModelTable(Model $model, string $alias = null): string (PROTECTED)`
 
 ### Scheduled Commands Manager
 
@@ -151,4 +140,4 @@ The `LarAPI\Core\Repositories\BaseRepository` class offers a lot of generic purp
 
 ### Slack Integration
 
-The `LarAPI\Common\Services\SlackClient` class provides you a simple way to send notifications to **Slack**. To enable this integration you need to provide the `SLACK_NOTIFICATIONS_WEBHOOK` ENV variable.
+The `LarAPI\Modules\Common\Services\SlackClient` class provides you a simple way to send notifications to **Slack**. To enable this integration you need to provide the `SLACK_NOTIFICATIONS_WEBHOOK` ENV variable.

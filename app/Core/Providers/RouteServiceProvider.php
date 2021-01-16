@@ -84,8 +84,8 @@ class RouteServiceProvider extends ServiceProvider
         foreach ($modules as $module) {
             Route::prefix('v1')
                 ->middleware('api')
-                ->namespace("LarAPI\\{$module}\\Controllers")
-                ->group(base_path("app/{$module}/Routing/v1.php"));
+                ->namespace("LarAPI\\Modules\\{$module}\\Controllers")
+                ->group(base_path("app/Modules/{$module}/Routing/v1.php"));
         }
     }
 }

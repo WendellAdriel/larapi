@@ -32,16 +32,10 @@ return [
 
     'slack' => [
         'webhook'  => env('SLACK_NOTIFICATIONS_WEBHOOK'),
-
-        'bot' => [
-            'name' => env('SLACK_NOTIFICATIONS_BOT_NAME'),
-            'icon' => env('SLACK_NOTIFICATIONS_BOT_ICON'),
+        'channel'  => env('SLACK_NOTIFICATIONS_CHANNEL', '#general'),
+        'bot'      => [
+            'name' => env('SLACK_NOTIFICATIONS_BOT_NAME', 'TS-API-BOT'),
+            'icon' => env('SLACK_NOTIFICATIONS_BOT_ICON', ':robot_face:'),
         ],
-
-        'channels' => [
-            'default' => env('SLACK_NOTIFICATIONS_CHANNEL'),
-            'dev'     => env('SLACK_NOTIFICATIONS_DEV_CHANNEL'),
-            'local'   => env('SLACK_NOTIFICATIONS_TEST_CHANNEL')
-        ]
-    ]
+    ],
 ];

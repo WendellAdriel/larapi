@@ -3,7 +3,7 @@
 namespace LarAPI\Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use LarAPI\Common\Services\SlackClient;
+use LarAPI\Modules\Common\Services\SlackClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
                     config('services.slack.bot.name'),
                     config('services.slack.bot.icon'),
                     $webhook,
-                    config('services.slack.channels.default')
+                    config('services.slack.channel')
                 );
             });
         }

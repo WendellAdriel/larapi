@@ -3,16 +3,14 @@
 namespace LarAPI\Core\Exceptions;
 
 use Exception;
-use Throwable;
-
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -57,7 +55,7 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  Throwable  $exception
+     * @param Throwable $exception
      * @return Response
      *
      * @throws Throwable
@@ -69,7 +67,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof ValidationException) {
-            return $this->error($exception, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->error($exception, Response::HTTP_UNPROCESSABLE_ENTITY, $exception->errors());
         }
 
         if (
@@ -91,7 +89,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param AuthenticationException $exception
-     * @return JsonResponse
+     * @return \Illuminate\Http\Response
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
@@ -103,10 +101,10 @@ class Handler extends ExceptionHandler
      *
      * @param Throwable   $exception
      * @param int|null    $code
-     * @param string|null $message
+     * @param string|array|null $message
      * @return JsonResponse
      */
-    private function error(Throwable $exception, int $code = null, string $message = null)
+    private function error(Throwable $exception, int $code = null, $message = null): JsonResponse
     {
         $response = ['message' => $message ?: $exception->getMessage()];
         if (config('app.debug')) {

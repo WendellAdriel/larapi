@@ -45,7 +45,7 @@ class BaseController extends LaravelController
      *
      * @param string         $message
      * @param Throwable|null $exception
-     * @param int|null       $code
+     * @param int            $code
      * @return JsonResponse
      */
     protected function apiErrorResponse(

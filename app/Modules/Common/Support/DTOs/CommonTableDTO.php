@@ -1,23 +1,36 @@
 <?php
 
-namespace LarAPI\Common\Support\DTOs;
+namespace LarAPI\Modules\Common\Support\DTOs;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Enumerable;
 
-class CommonTableDTO implements DTOInterface, Arrayable
+class CommonTableDTO implements DTOInterface
 {
-    /** @var int */
-    protected $page = self::DEFAULT_PAGE;
+    public const PAGE     = 'page';
+    public const PER_PAGE = 'per_page';
+    public const SORT     = 'sort';
+    public const SEARCH   = 'search';
+    public const FORMAT   = 'format';
+
+    public const DEFAULT_PAGE     = 1;
+    public const DEFAULT_PER_PAGE = 20;
+    public const PER_PAGE_ALL     = 'all';
+
+    public const SORT_FIELD = 'field';
+    public const SORT_ORDER = 'order';
+    public const ORDER_ASC  = 'asc';
+    public const ORDER_DESC = 'desc';
+
+    public const FORMAT_JSON = 'json';
+
+    protected int $page       = self::DEFAULT_PAGE;
+    protected array $sort     = [];
+    protected ?string $search = null;
+    protected string$format   = self::FORMAT_JSON;
+
     /** @var int|string */
     protected $perPage = self::DEFAULT_PER_PAGE;
-    /** @var array */
-    protected $sort = [];
-    /** @var string|null */
-    protected $search = null;
-    /** @var string */
-    protected $format = self::FORMAT_JSON;
 
     /**
      * @param int $page
@@ -114,10 +127,15 @@ class CommonTableDTO implements DTOInterface, Arrayable
      */
     public function getAll(): bool
     {
-        return (
-            (\is_string($this->perPage) && \strtolower($this->perPage) === self::PER_PAGE_ALL)
-            || $this->format !== self::FORMAT_JSON
-        );
+        return \is_string($this->perPage) && \strtolower($this->perPage) === self::PER_PAGE_ALL;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasSort(): bool
+    {
+        return !empty($this->sort) && !empty($this->sort[self::SORT_FIELD]);
     }
 
     /**
@@ -126,13 +144,13 @@ class CommonTableDTO implements DTOInterface, Arrayable
      */
     public function applySort(Enumerable $list): Enumerable
     {
-        if (empty($this->sort) || empty($this->sort[self::SORT_FIELD])) {
+        if (!$this->hasSort()) {
             return $list;
         }
 
         $sorted = $this->sort[self::SORT_ORDER] === self::ORDER_ASC
-            ? $list->sortBy($this->sort[self::SORT_FIELD])
-            : $list->sortByDesc($this->sort[self::SORT_FIELD]);
+            ? $list->sortBy($this->sort[self::SORT_FIELD], SORT_NATURAL | SORT_FLAG_CASE)
+            : $list->sortByDesc($this->sort[self::SORT_FIELD], SORT_NATURAL | SORT_FLAG_CASE);
 
         return $sorted->values();
     }
@@ -166,14 +184,14 @@ class CommonTableDTO implements DTOInterface, Arrayable
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
-            'page'     => $this->page,
-            'per_page' => $this->perPage,
-            'sort'     => $this->sort,
-            'search'   => $this->search,
-            'format'   => $this->format
+            self::PAGE     => $this->page,
+            self::PER_PAGE => $this->perPage,
+            self::SORT     => $this->sort,
+            self::SEARCH   => $this->search,
+            self::FORMAT   => $this->format
         ];
     }
 }

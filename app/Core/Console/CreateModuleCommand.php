@@ -14,7 +14,7 @@ class CreateModuleCommand extends Command
     public function handle()
     {
         $moduleName = Str::studly($this->argument('module'));
-        $modulePath = app_path($moduleName);
+        $modulePath = app_path("Modules/$moduleName");
         \mkdir($modulePath, 0755, true);
 
         foreach ($this->moduleStructure() as $directory) {
@@ -55,7 +55,7 @@ class CreateModuleCommand extends Command
         $path = "$modulePath/Routing";
         \mkdir($path, 0755, true);
 
-        $commonRoutingPath = app_path('Common/Routing');
+        $commonRoutingPath = app_path('Modules/Common/Routing');
         $routingFile       = 'v1.php';
 
         \copy("$commonRoutingPath/$routingFile", "$path/$routingFile");

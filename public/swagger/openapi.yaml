@@ -3,13 +3,28 @@ info:
   title: LarAPI
   version: '1.0'
 paths:
+  /:
+    get:
+      tags:
+        - 'Health Check'
+      summary: 'Health check route'
+      description: 'Returns the application name, environment and status of the API'
+      responses:
+        '200':
+          description: 'API info'
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: { description: 'Health check route', properties: { application: { description: 'Health check route', type: string }, environment: { description: 'Health check route', type: string }, status: { description: 'Health check route', type: integer } }, type: object }
+                type: object
   /v1/auth/login:
     post:
       tags:
         - Auth
       summary: 'Gets a JWT via given credentials'
       description: 'Logs in a user and gets the JWT token'
-      operationId: 'LarAPI\Auth\Controllers\AuthController::login'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::login'
       requestBody:
         description: 'User credentials'
         content:
@@ -42,7 +57,7 @@ paths:
         - Auth
       summary: 'Invalidates the token'
       description: 'Logs out a user and invalidates the JWT token'
-      operationId: 'LarAPI\Auth\Controllers\AuthController::logout'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::logout'
       responses:
         '200':
           description: 'Logout message'
@@ -62,7 +77,7 @@ paths:
         - Auth
       summary: 'Refreshes a token'
       description: 'Refresh the JWT Token, invalidating the old one and generating a new one'
-      operationId: 'LarAPI\Auth\Controllers\AuthController::refresh'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::refresh'
       responses:
         '200':
           description: 'The new JWT Token'
@@ -84,7 +99,7 @@ paths:
         - 'Logged User Info'
       summary: 'Gets the authenticated user'
       description: 'Gets the logged User'
-      operationId: 'LarAPI\Auth\Controllers\UserController::index'
+      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::index'
       responses:
         '200':
           description: 'The logged in info'
@@ -92,27 +107,12 @@ paths:
             application/json:
               schema:
                 properties:
-                  user: { description: 'Logged in user', properties: { id: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, email_verified_at: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: integer }, role_id: { description: 'Gets the authenticated user', type: integer }, last_login: { description: 'Gets the authenticated user', type: string }, settings: { description: 'Gets the authenticated user', type: object }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean } }, type: object }
+                  user: { description: 'Logged in user', properties: { id: { description: 'Gets the authenticated user', type: integer }, uuid: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: boolean }, role_id: { description: 'Gets the authenticated user', type: integer }, settings: { description: 'Gets the authenticated user', type: object }, last_login: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean }, is_user: { description: 'Gets the authenticated user', type: boolean }, is_viewer: { description: 'Gets the authenticated user', type: boolean }, role_label: { description: 'Gets the authenticated user', type: string } }, type: object }
                 type: object
         '401':
           description: Unauthorized
       security:
         jwt: {  }
-  /:
-    get:
-      tags:
-        - 'Health Check'
-      summary: 'Health check route'
-      description: 'Returns the application name, environment and status of the API'
-      responses:
-        '200':
-          description: 'API info'
-          content:
-            application/json:
-              schema:
-                properties:
-                  data: { description: 'Health check route', properties: { application: { description: 'Health check route', type: string }, environment: { description: 'Health check route', type: string }, status: { description: 'Health check route', type: integer } }, type: object }
-                type: object
 components:
   securitySchemes:
     jwt:

@@ -3,7 +3,6 @@
 namespace LarAPI\Repositories\Common;
 
 use Illuminate\Database\Eloquent\Model;
-
 use LarAPI\Core\Repositories\BaseRepository;
 use LarAPI\Models\Common\ApiTask;
 

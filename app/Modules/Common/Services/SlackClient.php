@@ -1,21 +1,16 @@
 <?php
 
-namespace LarAPI\Common\Services;
+namespace LarAPI\Modules\Common\Services;
 
 use Exception;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 class SlackClient
 {
-    /** @var string */
-    private $botName;
-    /** @var string */
-    private $botIcon;
-    /** @var string */
-    private $webhook;
-    /** @var string */
-    private $defaultChannel;
+    private string $botName;
+    private string $botIcon;
+    private string $webhook;
+    private string $defaultChannel;
 
     /**
      * SlackClient constructor
@@ -36,24 +31,17 @@ class SlackClient
     /**
      * Notify the Slack channel, sending the given message and mentioning the given users
      *
-     * @param string $message
-     * @param array  $users
-     * @param string $target - IF CHANNEL: '#channel' IF USER: '@username'
+     * @param string      $message
+     * @param array       $users
+     * @param string|null $target - IF CHANNEL: '#channel' IF USER: '@username'
      * @return void
      */
-    public function sendNotification(string $message, array $users = [], string $target = null): void
+    public function sendNotification(string $message, array $users = [], ?string $target = null): void
     {
         try {
             $formattedUsers  = $this->formatUsersToMention($users);
             $finalMessage    = empty($formattedUsers) ? $message : "{$formattedUsers}: {$message}";
             $channelToNotify = empty($target) ? $this->defaultChannel : $target;
-
-            if (App::environment(['local', 'testing'])) {
-                $channelToNotify = config('services.slack.channels.local');
-            }
-            if (App::environment('development')) {
-                $channelToNotify = config('services.slack.channels.dev');
-            }
 
             $payloadData = [
                 'username'   => $this->botName,
