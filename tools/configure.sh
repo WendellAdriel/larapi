@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "CONFIGURING LARAPI..."
+git init
 cp .env.example .env
 php artisan key:generate --ansi
 php artisan jwt:secret
@@ -11,6 +12,6 @@ echo "SETTING UP GIT HOOKS..."
 
 echo "GENERATING API DOCS..."
 sh ./tools/swagger.sh
-git add ./public/swagger
 
+git add .
 echo "LARAPI CONFIGURED!!!"
