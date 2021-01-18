@@ -11,6 +11,17 @@ use Throwable;
 
 class AuthController extends BaseController
 {
+    private AuthService $service;
+
+    /**
+     * AuthController constructor.
+     * @param AuthService $service
+     */
+    public function __construct(AuthService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Gets a JWT via given credentials
      *
@@ -59,17 +70,16 @@ class AuthController extends BaseController
      *      @OA\Response(response="401", description="Unauthorized"),
      * )
      *
-     * @param AuthService $authService
      * @return JsonResponse
      */
-    public function login(AuthService $authService): JsonResponse
+    public function login(): JsonResponse
     {
         $credentials = request(['email', 'password']);
-        if (!$token = $authService->getAPIToken($credentials)) {
+        if (!$token = $this->service->getAPIToken($credentials)) {
             return $this->apiErrorResponse(AuthService::UNAUTHORIZED_MSG, null, Response::HTTP_UNAUTHORIZED);
         }
 
-        return $this->respondWithToken($token);
+        return $this->apiSuccessResponse($this->service->buildTokenInfo($token));
     }
 
     /**
@@ -145,24 +155,80 @@ class AuthController extends BaseController
     public function refresh(): JsonResponse
     {
         try {
-            return $this->respondWithToken(Auth::refresh());
+            return $this->apiSuccessResponse($this->service->buildTokenInfo(Auth::refresh()));
         } catch (Throwable $exception) {
             return $this->apiErrorResponse(AuthService::UNAUTHORIZED_MSG, null, Response::HTTP_UNAUTHORIZED);
         }
     }
 
     /**
-     * Gets the token array structure
+     * Gets the authenticated user
      *
-     * @param string $token
+     * @OA\Get(
+     *      tags={"Logged User Info"},
+     *      path="/v1/auth/me",
+     *      description="Gets the logged User",
+     *      security={ "jwt": {} },
+     *
+     *      @OA\Response(response="200", description="The logged user info",
+     *          @OA\MediaType(mediaType="application/json",
+     *              @OA\Schema(type="object",
+     *                  @OA\Property(property="user", type="object", description="Logged in user",
+     *                      @OA\Property(property="id", type="integer"),
+     *                      @OA\Property(property="uuid", type="string"),
+     *                      @OA\Property(property="name", type="string"),
+     *                      @OA\Property(property="email", type="string"),
+     *                      @OA\Property(property="active", type="boolean"),
+     *                      @OA\Property(property="role_id", type="integer"),
+     *                      @OA\Property(property="settings", type="object"),
+     *                      @OA\Property(property="last_login", type="string"),
+     *                      @OA\Property(property="created_at", type="string"),
+     *                      @OA\Property(property="updated_at", type="string"),
+     *                      @OA\Property(property="is_admin", type="boolean"),
+     *                      @OA\Property(property="is_manager", type="boolean"),
+     *                      @OA\Property(property="is_user", type="boolean"),
+     *                      @OA\Property(property="is_viewer", type="boolean"),
+     *                      @OA\Property(property="role_label", type="string"),
+     *                  ),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(response="401", description="Unauthorized"),
+     * )
+     *
      * @return JsonResponse
      */
-    protected function respondWithToken(string $token): JsonResponse
+    public function loggedUser(): JsonResponse
     {
-        return $this->apiSuccessResponse([
-            'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => Auth::factory()->getTTL() * 60
-        ]);
+        return $this->apiSuccessResponse(Auth::user());
+    }
+
+    /**
+     * Gets the authenticated user allowed roles
+     *
+     * @OA\Get(
+     *      tags={"Logged User Info"},
+     *      path="/v1/auth/me/roles",
+     *      description="Gets the logged User allowed roles",
+     *      security={ "jwt": {} },
+     *
+     *      @OA\Response(response="200", description="The logged user allowed roles",
+     *          @OA\MediaType(mediaType="application/json",
+     *              @OA\Schema(type="array",
+     *                  @OA\Items(type="object",
+     *                      @OA\Property(property="id", type="integer"),
+     *                      @OA\Property(property="name", type="string"),
+     *                  ),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(response="401", description="Unauthorized"),
+     * )
+     *
+     * @return JsonResponse
+     */
+    public function loggedUserRoles(): JsonResponse
+    {
+        return $this->apiSuccessResponse($this->service->getUserAllowedRoles(Auth::user()));
     }
 }

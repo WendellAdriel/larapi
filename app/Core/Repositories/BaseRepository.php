@@ -19,6 +19,15 @@ abstract class BaseRepository
     abstract public function getModel(): Model;
 
     /**
+     * @param array|string[] $columns
+     * @return Collection
+     */
+    public function all(array $columns = self::ALL_COLUMNS): Collection
+    {
+        return $this->newQuery($columns)->get();
+    }
+
+    /**
      * Gets all models by the given attribute
      *
      * @param string $attribute

@@ -99,16 +99,37 @@ paths:
         - 'Logged User Info'
       summary: 'Gets the authenticated user'
       description: 'Gets the logged User'
-      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::index'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::loggedUser'
       responses:
         '200':
-          description: 'The logged in info'
+          description: 'The logged user info'
           content:
             application/json:
               schema:
                 properties:
                   user: { description: 'Logged in user', properties: { id: { description: 'Gets the authenticated user', type: integer }, uuid: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: boolean }, role_id: { description: 'Gets the authenticated user', type: integer }, settings: { description: 'Gets the authenticated user', type: object }, last_login: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean }, is_user: { description: 'Gets the authenticated user', type: boolean }, is_viewer: { description: 'Gets the authenticated user', type: boolean }, role_label: { description: 'Gets the authenticated user', type: string } }, type: object }
                 type: object
+        '401':
+          description: Unauthorized
+      security:
+        jwt: {  }
+  /v1/auth/me/roles:
+    get:
+      tags:
+        - 'Logged User Info'
+      summary: 'Gets the authenticated user allowed roles'
+      description: 'Gets the logged User allowed roles'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::loggedUserRoles'
+      responses:
+        '200':
+          description: 'The logged user allowed roles'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties: { id: { description: 'Gets the authenticated user allowed roles', type: integer }, name: { description: 'Gets the authenticated user allowed roles', type: string } }
+                  type: object
         '401':
           description: Unauthorized
       security:

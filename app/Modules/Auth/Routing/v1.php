@@ -12,6 +12,10 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('logout', 'AuthController@logout');
-        Route::get('me', 'UserController@index');
+
+        Route::prefix('me')->group(function () {
+            Route::get('/', 'AuthController@loggedUser');
+            Route::get('roles', 'AuthController@loggedUserRoles');
+        });
     });
 });
