@@ -4,9 +4,11 @@ namespace LarAPI\Modules\Auth\Controllers;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use LarAPI\Core\Http\BaseController;
 use LarAPI\Modules\Auth\Requests\CreateUserRequest;
+use LarAPI\Modules\Auth\Requests\UpdateUserRequest;
 use LarAPI\Modules\Auth\Services\UserService;
 use LarAPI\Modules\Common\Requests\CommonTableRequest;
 
@@ -197,11 +199,83 @@ class UserController extends BaseController
         return $this->apiSuccessResponse($this->service->getUser($uuid));
     }
 
-    public function update(string $uuid): JsonResponse
+    /**
+     * Updates the info of a specific user
+     *
+     * @OA\Put(
+     *      tags={"Users Management"},
+     *      path="/v1/users/{uuid}",
+     *      description="Updates the info of a specific user",
+     *      security={ "jwt": {} },
+     *
+     *      @OA\RequestBody(description="Info needed to update the user info",
+     *          @OA\MediaType(mediaType="application/json",
+     *              @OA\Schema(type="object", required={"name"},
+     *                  @OA\Property(property="name", type="string"),
+     *                  @OA\Property(property="password", type="string", description="Must contain at least one lowercase letter, one uppercase letter, one number and one special character"),
+     *                  @OA\Property(property="password_confirmation", type="string"),
+     *                  @OA\Property(property="active", type="boolean"),
+     *                  @OA\Property(property="role_id", type="integer"),
+     *              ),
+     *          ),
+     *      ),
+     *
+     *     @OA\Response(response="200", description="The success response",
+     *          @OA\MediaType(mediaType="application/json",
+     *              @OA\Schema(type="object",
+     *                  @OA\Property(property="success", type="boolean"),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(response="400", description="Invalid Request"),
+     *      @OA\Response(response="401", description="Unauthorized"),
+     *      @OA\Response(response="403", description="Access Denied"),
+     *      @OA\Response(response="422", description="Data is invalid"),
+     * )
+     *
+     * @param UpdateUserRequest $request
+     * @param string            $uuid
+     * @return JsonResponse
+     */
+    public function update(UpdateUserRequest $request, string $uuid): JsonResponse
     {
+        $this->service->updateUser(Auth::user(), $uuid, $request->getDTO());
+        return $this->apiSimpleSuccessResponse(Response::HTTP_OK);
     }
 
+    /**
+     * Deletes a specific user
+     *
+     * @OA\Delete(
+     *      tags={"Users Management"},
+     *      path="/v1/users/{uuid}",
+     *      description="Deletes a specific user",
+     *      security={ "jwt": {} },
+     *
+     *      @OA\Parameter(name="uuid", in="path", required=true,
+     *          @OA\Schema(type="string"),
+     *      ),
+     *
+     *      @OA\Response(response="200", description="The success response",
+     *          @OA\MediaType(mediaType="application/json",
+     *              @OA\Schema(type="object",
+     *                  @OA\Property(property="success", type="boolean"),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(response="400", description="Invalid Request"),
+     *      @OA\Response(response="401", description="Unauthorized"),
+     *      @OA\Response(response="403", description="Access Denied"),
+     *      @OA\Response(response="404", description="Resource not found"),
+     * )
+     *
+     * @param string $uuid
+     * @return JsonResponse
+     * @throws ModelNotFoundException
+     */
     public function delete(string $uuid): JsonResponse
     {
+        $this->service->deleteUser($uuid);
+        return $this->apiSimpleSuccessResponse(Response::HTTP_OK);
     }
 }

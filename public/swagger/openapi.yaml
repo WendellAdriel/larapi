@@ -316,6 +316,87 @@ paths:
           description: 'Resource not found'
       security:
         jwt: {  }
+    put:
+      tags:
+        - 'Users Management'
+      summary: 'Updates the info of a specific user'
+      description: 'Updates the info of a specific user'
+      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::update'
+      requestBody:
+        description: 'Info needed to update the user info'
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+              properties:
+                name:
+                  description: 'Updates the info of a specific user'
+                  type: string
+                password:
+                  description: 'Must contain at least one lowercase letter, one uppercase letter, one number and one special character'
+                  type: string
+                password_confirmation:
+                  description: 'Updates the info of a specific user'
+                  type: string
+                active:
+                  description: 'Updates the info of a specific user'
+                  type: boolean
+                role_id:
+                  description: 'Updates the info of a specific user'
+                  type: integer
+              type: object
+      responses:
+        '200':
+          description: 'The success response'
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { description: 'Updates the info of a specific user', type: boolean }
+                type: object
+        '400':
+          description: 'Invalid Request'
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Access Denied'
+        '422':
+          description: 'Data is invalid'
+      security:
+        jwt: {  }
+    delete:
+      tags:
+        - 'Users Management'
+      summary: 'Deletes a specific user'
+      description: 'Deletes a specific user'
+      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::delete'
+      parameters:
+        -
+          name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The success response'
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { description: 'Deletes a specific user', type: boolean }
+                type: object
+        '400':
+          description: 'Invalid Request'
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Access Denied'
+        '404':
+          description: 'Resource not found'
+      security:
+        jwt: {  }
 components:
   securitySchemes:
     jwt:

@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('{uuid}')->group(function () {
             Route::get('/', 'UserController@show');
             Route::put('/', 'UserController@update')->middleware('block_viewer');
-            Route::delete('/', 'UserController@delete')->middleware('block_viewer');
+            Route::delete('/', 'UserController@delete')->middleware('check_manager');
         });
     });
 });
