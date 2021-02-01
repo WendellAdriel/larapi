@@ -55,5 +55,6 @@ class Kernel extends HttpKernel
         'verified'         => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check_admin'      => Middlewares\HasAdminRole::class,
         'check_manager'    => Middlewares\HasManagerRole::class,
+        'block_viewer'     => Middlewares\BlockViewerUsers::class,
     ];
 }

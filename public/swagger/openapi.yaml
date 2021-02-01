@@ -107,7 +107,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  user: { description: 'Logged in user', properties: { id: { description: 'Gets the authenticated user', type: integer }, uuid: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: boolean }, role_id: { description: 'Gets the authenticated user', type: integer }, settings: { description: 'Gets the authenticated user', type: object }, last_login: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean }, is_user: { description: 'Gets the authenticated user', type: boolean }, is_viewer: { description: 'Gets the authenticated user', type: boolean }, role_label: { description: 'Gets the authenticated user', type: string } }, type: object }
+                  user: { description: 'Logged in user', properties: { id: { description: 'Gets the authenticated user', type: integer }, uuid: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: boolean }, role_id: { description: 'Gets the authenticated user', type: integer }, settings: { description: 'Gets the authenticated user', type: object }, last_login: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean }, is_user: { description: 'Gets the authenticated user', type: boolean }, is_viewer: { description: 'Gets the authenticated user', type: boolean }, role_label: { description: 'Gets the authenticated user', type: string }, role: { description: 'Gets the authenticated user', properties: { id: { description: 'Gets the authenticated user', type: integer }, name: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string } }, type: object } }, type: object }
                 type: object
         '401':
           description: Unauthorized
@@ -128,10 +128,68 @@ paths:
               schema:
                 type: array
                 items:
-                  properties: { id: { description: 'Gets the authenticated user allowed roles', type: integer }, name: { description: 'Gets the authenticated user allowed roles', type: string } }
+                  properties: { id: { description: 'Gets the authenticated user allowed roles', type: integer }, name: { description: 'Gets the authenticated user allowed roles', type: string }, created_at: { description: 'Gets the authenticated user allowed roles', type: string }, updated_at: { description: 'Gets the authenticated user allowed roles', type: string } }
                   type: object
         '401':
           description: Unauthorized
+      security:
+        jwt: {  }
+  /v1/users:
+    post:
+      tags:
+        - 'Users Management'
+      summary: 'Creates a new user'
+      description: 'Creates a new user'
+      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::create'
+      requestBody:
+        description: 'Info needed to create a new user'
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+              properties:
+                name:
+                  description: 'Creates a new user'
+                  type: string
+                email:
+                  description: 'Creates a new user'
+                  type: string
+                password:
+                  description: 'Must contain at least one lowercase letter, one uppercase letter, one number and one special character'
+                  type: string
+                password_confirmation:
+                  description: 'Creates a new user'
+                  type: string
+                active:
+                  description: 'Creates a new user'
+                  type: boolean
+                  default: true
+                role_id:
+                  description: 'Creates a new user'
+                  type: integer
+                  default: 3
+              type: object
+      responses:
+        '201':
+          description: 'The success response'
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { description: 'Creates a new user', type: boolean }
+                type: object
+        '400':
+          description: 'Invalid Request'
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Access Denied'
+        '422':
+          description: 'Data is invalid'
       security:
         jwt: {  }
 components:

@@ -18,4 +18,15 @@ Route::middleware('auth')->group(function () {
             Route::get('roles', 'AuthController@loggedUserRoles');
         });
     });
+
+    Route::prefix('users')->group(function () {
+        Route::get('/', 'UserController@index');
+        Route::post('/', 'UserController@create')->middleware('block_viewer');
+
+        Route::prefix('{uuid}')->group(function () {
+            Route::get('/', 'UserController@show');
+            Route::put('/', 'UserController@update')->middleware('block_viewer');
+            Route::delete('/', 'UserController@delete')->middleware('block_viewer');
+        });
+    });
 });
