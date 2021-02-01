@@ -2,9 +2,12 @@
 
 namespace LarAPI\Modules\Auth\Services;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LarAPI\Models\Auth\Role;
 use LarAPI\Models\Auth\User;
 use LarAPI\Modules\Auth\Support\DTOs\CreateUserDTO;
+use LarAPI\Modules\Common\Support\DTOs\CommonTableDTO;
+use LarAPI\Modules\Common\Support\Paginator;
 use LarAPI\Repositories\Auth\UserRepository;
 
 class UserService
@@ -18,6 +21,18 @@ class UserService
     public function __construct(UserRepository $repository)
     {
         $this->repository = $repository;
+    }
+
+    /**
+     * @param CommonTableDTO $dto
+     * @return array
+     */
+    public function getAllUsers(CommonTableDTO $dto): array
+    {
+        $users     = $this->repository->all();
+        $formatted = $dto->applyFilter($users, ['name', 'email', 'role_label']);
+        $formatted = $dto->applySort($formatted);
+        return Paginator::manualPaginate($formatted, $users->count(), $dto);
     }
 
     /**
@@ -37,5 +52,15 @@ class UserService
         }
 
         return $this->repository->create($dto->toArray());
+    }
+
+    /**
+     * @param string $userUuid
+     * @return User
+     * @throws ModelNotFoundException
+     */
+    public function getUser(string $userUuid): User
+    {
+        return $this->repository->getByOrFail('uuid', $userUuid);
     }
 }

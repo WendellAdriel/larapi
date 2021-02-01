@@ -78,7 +78,7 @@ class CommonTableRequest extends BaseRequest
      * @param string $default
      * @return string
      */
-    protected function format($default = CommonTableDTO::FORMAT_JSON): string
+    public function format($default = CommonTableDTO::FORMAT_JSON): string
     {
         $format = $this->route()->parameter(CommonTableDTO::FORMAT, $default);
         return \ltrim($format, '.');
