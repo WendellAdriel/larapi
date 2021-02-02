@@ -1,3 +1,5 @@
+<p align="center"><img src="/art/socialcard.png" alt="LARAPI Social Card"></p>
+
 # LARAPI
 
 Opinionated API Skeleton created with Laravel
@@ -10,7 +12,7 @@ composer create-project --prefer-dist wendelladriel/larapi my-app && cd my-app &
 
 This will:
 - Create the project
-- Install the dependencies
+- Install the dependenciesr
 - Copy the `.env.example` to `.env` in the project root;
 - Generate the `APP_KEY`
 - Generate the `JWT_SECRET`
@@ -141,3 +143,10 @@ The `LarAPI\Core\Repositories\BaseRepository` class offers a lot of generic purp
 ### Slack Integration
 
 The `LarAPI\Modules\Common\Services\SlackClient` class provides you a simple way to send notifications to **Slack**. To enable this integration you need to provide the `SLACK_NOTIFICATIONS_WEBHOOK` ENV variable.
+
+### Credits
+
+- [Wendell Adriel](https://github.com/WendellAdriel)
+- [All Contributors](../../contributors)
+
+And a special thanks to [Caneco](https://twitter.com/caneco) for the logo ✨
