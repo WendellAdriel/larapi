@@ -3,13 +3,28 @@ info:
   title: LarAPI
   version: '1.0'
 paths:
+  /:
+    get:
+      tags:
+        - 'Health Check'
+      summary: 'Health check route'
+      description: 'Returns the application name, environment and status of the API'
+      responses:
+        '200':
+          description: 'API info'
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: { description: 'Health check route', properties: { application: { description: 'Health check route', type: string }, environment: { description: 'Health check route', type: string }, status: { description: 'Health check route', type: integer } }, type: object }
+                type: object
   /v1/auth/login:
     post:
       tags:
         - Auth
       summary: 'Gets a JWT via given credentials'
       description: 'Logs in a user and gets the JWT token'
-      operationId: 'LarAPI\Auth\Controllers\AuthController::login'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::login'
       requestBody:
         description: 'User credentials'
         content:
@@ -42,7 +57,7 @@ paths:
         - Auth
       summary: 'Invalidates the token'
       description: 'Logs out a user and invalidates the JWT token'
-      operationId: 'LarAPI\Auth\Controllers\AuthController::logout'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::logout'
       responses:
         '200':
           description: 'Logout message'
@@ -62,7 +77,7 @@ paths:
         - Auth
       summary: 'Refreshes a token'
       description: 'Refresh the JWT Token, invalidating the old one and generating a new one'
-      operationId: 'LarAPI\Auth\Controllers\AuthController::refresh'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::refresh'
       responses:
         '200':
           description: 'The new JWT Token'
@@ -81,21 +96,305 @@ paths:
   /v1/auth/me:
     get:
       tags:
-        - Auth
+        - 'Logged User Info'
       summary: 'Gets the authenticated user'
       description: 'Gets the logged User'
-      operationId: 'LarAPI\Auth\Controllers\AuthController::me'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::loggedUser'
       responses:
         '200':
-          description: 'The logged in info'
+          description: 'The logged user info'
           content:
             application/json:
               schema:
                 properties:
-                  user: { description: 'Logged in user', properties: { id: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, email_verified_at: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: integer }, role_id: { description: 'Gets the authenticated user', type: integer }, last_login: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean } }, type: object }
+                  id: { description: 'Gets the authenticated user', type: integer }
+                  uuid: { description: 'Gets the authenticated user', type: string }
+                  name: { description: 'Gets the authenticated user', type: string }
+                  email: { description: 'Gets the authenticated user', type: string }
+                  active: { description: 'Gets the authenticated user', type: boolean }
+                  role_id: { description: 'Gets the authenticated user', type: integer }
+                  settings: { description: 'Gets the authenticated user', type: object }
+                  last_login: { description: 'Gets the authenticated user', type: string }
+                  created_at: { description: 'Gets the authenticated user', type: string }
+                  updated_at: { description: 'Gets the authenticated user', type: string }
+                  is_admin: { description: 'Gets the authenticated user', type: boolean }
+                  is_manager: { description: 'Gets the authenticated user', type: boolean }
+                  is_user: { description: 'Gets the authenticated user', type: boolean }
+                  is_viewer: { description: 'Gets the authenticated user', type: boolean }
+                  role_label: { description: 'Gets the authenticated user', type: string }
+                  role: { description: 'Gets the authenticated user', properties: { id: { description: 'Gets the authenticated user', type: integer }, name: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string } }, type: object }
                 type: object
         '401':
           description: Unauthorized
+      security:
+        jwt: []
+  /v1/auth/me/roles:
+    get:
+      tags:
+        - 'Logged User Info'
+      summary: 'Gets the authenticated user allowed roles'
+      description: 'Gets the logged User allowed roles'
+      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::loggedUserRoles'
+      responses:
+        '200':
+          description: 'The logged user allowed roles'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties: { id: { description: 'Gets the authenticated user allowed roles', type: integer }, name: { description: 'Gets the authenticated user allowed roles', type: string }, created_at: { description: 'Gets the authenticated user allowed roles', type: string }, updated_at: { description: 'Gets the authenticated user allowed roles', type: string } }
+                  type: object
+        '401':
+          description: Unauthorized
+      security:
+        jwt: []
+  /v1/users:
+    get:
+      tags:
+        - 'Users Management'
+      summary: 'Gets the list of users'
+      description: 'Gets the list of users'
+      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::index'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        -
+          name: sort
+          in: query
+          required: false
+          schema:
+            properties:
+              field:
+                description: 'Field name to use in sort'
+                type: string
+              order:
+                description: 'Order: ''asc'' or ''desc'''
+                type: string
+            type: object
+        -
+          name: search
+          in: query
+          description: 'Term to search'
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The list of users'
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: { description: 'Gets the list of users', type: array, items: { properties: { id: { description: 'Gets the list of users', type: integer }, uuid: { description: 'Gets the list of users', type: string }, name: { description: 'Gets the list of users', type: string }, email: { description: 'Gets the list of users', type: string }, active: { description: 'Gets the list of users', type: boolean }, role_id: { description: 'Gets the list of users', type: integer }, settings: { description: 'Gets the list of users', type: object }, last_login: { description: 'Gets the list of users', type: string }, created_at: { description: 'Gets the list of users', type: string }, updated_at: { description: 'Gets the list of users', type: string }, is_admin: { description: 'Gets the list of users', type: boolean }, is_manager: { description: 'Gets the list of users', type: boolean }, is_user: { description: 'Gets the list of users', type: boolean }, is_viewer: { description: 'Gets the list of users', type: boolean }, role_label: { description: 'Gets the list of users', type: string }, role: { description: 'Gets the list of users', properties: { id: { description: 'Gets the list of users', type: integer }, name: { description: 'Gets the list of users', type: string }, created_at: { description: 'Gets the list of users', type: string }, updated_at: { description: 'Gets the list of users', type: string } }, type: object } }, type: object } }
+                  pagination: { description: 'Gets the list of users', properties: { page_count: { description: 'Gets the list of users', type: integer }, total: { description: 'The filtered total count', type: integer }, total_all: { description: 'The unfiltered total count', type: integer } }, type: object }
+                type: object
+        '400':
+          description: 'Invalid Request'
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Access Denied'
+        '404':
+          description: 'Resource not found'
+      security:
+        jwt: []
+    post:
+      tags:
+        - 'Users Management'
+      summary: 'Creates a new user'
+      description: 'Creates a new user'
+      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::create'
+      requestBody:
+        description: 'Info needed to create a new user'
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+              properties:
+                name:
+                  description: 'Creates a new user'
+                  type: string
+                email:
+                  description: 'Creates a new user'
+                  type: string
+                password:
+                  description: 'Must contain at least one lowercase letter, one uppercase letter, one number and one special character'
+                  type: string
+                password_confirmation:
+                  description: 'Creates a new user'
+                  type: string
+                active:
+                  description: 'Creates a new user'
+                  type: boolean
+                  default: true
+                role_id:
+                  description: 'Creates a new user'
+                  type: integer
+                  default: 3
+              type: object
+      responses:
+        '201':
+          description: 'The success response'
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { description: 'Creates a new user', type: boolean }
+                type: object
+        '400':
+          description: 'Invalid Request'
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Access Denied'
+        '422':
+          description: 'Data is invalid'
+      security:
+        jwt: []
+  '/v1/users/{uuid}':
+    get:
+      tags:
+        - 'Users Management'
+      summary: 'Gets the info of a specific user'
+      description: 'Gets the info of a specific user'
+      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::show'
+      parameters:
+        -
+          name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The user info'
+          content:
+            application/json:
+              schema:
+                properties:
+                  id: { description: 'Gets the info of a specific user', type: integer }
+                  uuid: { description: 'Gets the info of a specific user', type: string }
+                  name: { description: 'Gets the info of a specific user', type: string }
+                  email: { description: 'Gets the info of a specific user', type: string }
+                  active: { description: 'Gets the info of a specific user', type: boolean }
+                  role_id: { description: 'Gets the info of a specific user', type: integer }
+                  settings: { description: 'Gets the info of a specific user', type: object }
+                  last_login: { description: 'Gets the info of a specific user', type: string }
+                  created_at: { description: 'Gets the info of a specific user', type: string }
+                  updated_at: { description: 'Gets the info of a specific user', type: string }
+                  is_admin: { description: 'Gets the info of a specific user', type: boolean }
+                  is_manager: { description: 'Gets the info of a specific user', type: boolean }
+                  is_user: { description: 'Gets the info of a specific user', type: boolean }
+                  is_viewer: { description: 'Gets the info of a specific user', type: boolean }
+                  role_label: { description: 'Gets the info of a specific user', type: string }
+                  role: { description: 'Gets the info of a specific user', properties: { id: { description: 'Gets the info of a specific user', type: integer }, name: { description: 'Gets the info of a specific user', type: string }, created_at: { description: 'Gets the info of a specific user', type: string }, updated_at: { description: 'Gets the info of a specific user', type: string } }, type: object }
+                type: object
+        '400':
+          description: 'Invalid Request'
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Access Denied'
+        '404':
+          description: 'Resource not found'
+      security:
+        jwt: []
+    put:
+      tags:
+        - 'Users Management'
+      summary: 'Updates the info of a specific user'
+      description: 'Updates the info of a specific user'
+      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::update'
+      requestBody:
+        description: 'Info needed to update the user info'
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+              properties:
+                name:
+                  description: 'Updates the info of a specific user'
+                  type: string
+                password:
+                  description: 'Must contain at least one lowercase letter, one uppercase letter, one number and one special character'
+                  type: string
+                password_confirmation:
+                  description: 'Updates the info of a specific user'
+                  type: string
+                active:
+                  description: 'Updates the info of a specific user'
+                  type: boolean
+                role_id:
+                  description: 'Updates the info of a specific user'
+                  type: integer
+              type: object
+      responses:
+        '200':
+          description: 'The success response'
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { description: 'Updates the info of a specific user', type: boolean }
+                type: object
+        '400':
+          description: 'Invalid Request'
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Access Denied'
+        '422':
+          description: 'Data is invalid'
+      security:
+        jwt: []
+    delete:
+      tags:
+        - 'Users Management'
+      summary: 'Deletes a specific user'
+      description: 'Deletes a specific user'
+      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::delete'
+      parameters:
+        -
+          name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The success response'
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { description: 'Deletes a specific user', type: boolean }
+                type: object
+        '400':
+          description: 'Invalid Request'
+        '401':
+          description: Unauthorized
+        '403':
+          description: 'Access Denied'
+        '404':
+          description: 'Resource not found'
       security:
         jwt: []
 components:

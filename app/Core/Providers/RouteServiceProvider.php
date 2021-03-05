@@ -40,6 +40,27 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        /**
+         * Health check route
+         *
+         * @OA\Get(
+         *      tags={"Health Check"},
+         *      path="/",
+         *      description="Returns the application name, environment and status of the API",
+         *
+         *      @OA\Response(response="200", description="API info",
+         *          @OA\MediaType(mediaType="application/json",
+         *              @OA\Schema(type="object",
+         *                  @OA\Property(property="data", type="object",
+         *                      @OA\Property(property="application", type="string"),
+         *                      @OA\Property(property="environment", type="string"),
+         *                      @OA\Property(property="status", type="integer"),
+         *                  ),
+         *              ),
+         *          ),
+         *      ),
+         *  )
+         */
         Route::get('/', function () {
             return response()->json([
                 'application' => config('app.name'),
@@ -63,8 +84,8 @@ class RouteServiceProvider extends ServiceProvider
         foreach ($modules as $module) {
             Route::prefix('v1')
                 ->middleware('api')
-                ->namespace("LarAPI\\{$module}\\Controllers")
-                ->group(base_path("app/{$module}/Routing/v1.php"));
+                ->namespace("LarAPI\\Modules\\{$module}\\Controllers")
+                ->group(base_path("app/Modules/{$module}/Routing/v1.php"));
         }
     }
 }

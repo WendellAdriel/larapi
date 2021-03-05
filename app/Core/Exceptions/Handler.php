@@ -2,13 +2,15 @@
 
 namespace LarAPI\Core\Exceptions;
 
-use Throwable;
+use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -23,7 +25,7 @@ class Handler extends ExceptionHandler
         \Symfony\Component\HttpKernel\Exception\HttpException::class,
         ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
-        \Illuminate\Validation\ValidationException::class,
+        ValidationException::class,
     ];
 
     /**
@@ -39,10 +41,10 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Throwable  $exception
+     * @param  Throwable  $exception
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function report(Throwable $exception)
     {
@@ -53,45 +55,58 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Throwable $exception
+     * @return Response
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
-            return $this->error('Resource not found', Response::HTTP_NOT_FOUND, $exception);
-        }
         if ($exception instanceof AuthenticationException) {
-            return $this->error('Unauthenticated', Response::HTTP_UNAUTHORIZED, $exception);
+            return $this->error($exception, Response::HTTP_UNAUTHORIZED, 'Unauthenticated');
         }
-        return $this->error($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR, $exception);
+
+        if ($exception instanceof ValidationException) {
+            return $this->error($exception, Response::HTTP_UNPROCESSABLE_ENTITY, $exception->errors());
+        }
+
+        if (
+            $exception instanceof ModelNotFoundException
+            || $exception instanceof NotFoundHttpException
+        ) {
+            return $this->error($exception, Response::HTTP_NOT_FOUND, 'Resource not found');
+        }
+
+        if ($exception instanceof LarAPIExceptionInterface) {
+            return $this->error($exception);
+        }
+
+        return $this->error($exception, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @param AuthenticationException $exception
      * @return \Illuminate\Http\Response
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        return $this->error('Unauthenticated', Response::HTTP_UNAUTHORIZED, $exception);
+        return $this->error($exception, Response::HTTP_UNAUTHORIZED, 'Unauthenticated');
     }
 
     /**
      * Builds an error response
      *
-     * @param string    $message
-     * @param int       $code
-     * @param Throwable $exception
+     * @param Throwable   $exception
+     * @param int|null    $code
+     * @param string|array|null $message
      * @return JsonResponse
      */
-    private function error(string $message, int $code, Throwable $exception)
+    private function error(Throwable $exception, int $code = null, $message = null): JsonResponse
     {
-        $response = ['message' => $message];
+        $response = ['message' => $message ?: $exception->getMessage()];
         if (config('app.debug')) {
             $response['debug'] = [
                 'message' => $exception->getMessage(),
@@ -101,6 +116,6 @@ class Handler extends ExceptionHandler
             ];
         }
 
-        return response()->json($response, $code);
+        return response()->json($response, $code ?: $exception->getCode());
     }
 }
