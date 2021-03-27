@@ -70,7 +70,7 @@ paths:
         '401':
           description: Unauthorized
       security:
-        jwt: []
+        jwt: {  }
   /v1/auth/refresh:
     post:
       tags:
@@ -92,7 +92,7 @@ paths:
         '401':
           description: Unauthorized
       security:
-        jwt: []
+        jwt: {  }
   /v1/auth/me:
     get:
       tags:
@@ -127,7 +127,7 @@ paths:
         '401':
           description: Unauthorized
       security:
-        jwt: []
+        jwt: {  }
   /v1/auth/me/roles:
     get:
       tags:
@@ -148,7 +148,7 @@ paths:
         '401':
           description: Unauthorized
       security:
-        jwt: []
+        jwt: {  }
   /v1/users:
     get:
       tags:
@@ -210,7 +210,7 @@ paths:
         '404':
           description: 'Resource not found'
       security:
-        jwt: []
+        jwt: {  }
     post:
       tags:
         - 'Users Management'
@@ -267,7 +267,7 @@ paths:
         '422':
           description: 'Data is invalid'
       security:
-        jwt: []
+        jwt: {  }
   '/v1/users/{uuid}':
     get:
       tags:
@@ -315,7 +315,7 @@ paths:
         '404':
           description: 'Resource not found'
       security:
-        jwt: []
+        jwt: {  }
     put:
       tags:
         - 'Users Management'
@@ -364,7 +364,7 @@ paths:
         '422':
           description: 'Data is invalid'
       security:
-        jwt: []
+        jwt: {  }
     delete:
       tags:
         - 'Users Management'
@@ -396,7 +396,7 @@ paths:
         '404':
           description: 'Resource not found'
       security:
-        jwt: []
+        jwt: {  }
 components:
   securitySchemes:
     jwt:
