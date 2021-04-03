@@ -12,8 +12,5 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 cghooks.lock
-<<<<<<< HEAD
-.idea
-=======
 .idea/*
->>>>>>> 9cdde673515504cdb41a58b56bac024a7e665853
+
