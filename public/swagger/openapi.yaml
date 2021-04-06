@@ -107,22 +107,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  id: { description: 'Gets the authenticated user', type: integer }
-                  uuid: { description: 'Gets the authenticated user', type: string }
-                  name: { description: 'Gets the authenticated user', type: string }
-                  email: { description: 'Gets the authenticated user', type: string }
-                  active: { description: 'Gets the authenticated user', type: boolean }
-                  role_id: { description: 'Gets the authenticated user', type: integer }
-                  settings: { description: 'Gets the authenticated user', type: object }
-                  last_login: { description: 'Gets the authenticated user', type: string }
-                  created_at: { description: 'Gets the authenticated user', type: string }
-                  updated_at: { description: 'Gets the authenticated user', type: string }
-                  is_admin: { description: 'Gets the authenticated user', type: boolean }
-                  is_manager: { description: 'Gets the authenticated user', type: boolean }
-                  is_user: { description: 'Gets the authenticated user', type: boolean }
-                  is_viewer: { description: 'Gets the authenticated user', type: boolean }
-                  role_label: { description: 'Gets the authenticated user', type: string }
-                  role: { description: 'Gets the authenticated user', properties: { id: { description: 'Gets the authenticated user', type: integer }, name: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string } }, type: object }
+                  user: { description: 'Gets the authenticated user', properties: { id: { description: 'Gets the authenticated user', type: integer }, uuid: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: boolean }, role_id: { description: 'Gets the authenticated user', type: integer }, settings: { description: 'Gets the authenticated user', type: object }, last_login: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean }, is_user: { description: 'Gets the authenticated user', type: boolean }, is_viewer: { description: 'Gets the authenticated user', type: boolean }, role_label: { description: 'Gets the authenticated user', type: string }, role: { description: 'Gets the authenticated user', properties: { id: { description: 'Gets the authenticated user', type: integer }, name: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string } }, type: object } }, type: object }
                 type: object
         '401':
           description: Unauthorized
