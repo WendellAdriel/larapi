@@ -62,6 +62,7 @@ class RouteServiceProvider extends ServiceProvider
          *  )
          */
         Route::get('/', function () {
+            dd(phpinfo());
             return response()->json([
                 'application' => config('app.name'),
                 'environment' => config('app.env'),
