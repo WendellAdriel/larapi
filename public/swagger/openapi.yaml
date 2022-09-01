@@ -16,7 +16,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  data: { description: 'Health check route', properties: { application: { description: 'Health check route', type: string }, environment: { description: 'Health check route', type: string }, status: { description: 'Health check route', type: integer } }, type: object }
+                  data: { properties: { application: { type: string }, environment: { type: string }, status: { type: integer } }, type: object }
                 type: object
   /v1/auth/login:
     post:
@@ -24,7 +24,7 @@ paths:
         - Auth
       summary: 'Gets a JWT via given credentials'
       description: 'Logs in a user and gets the JWT token'
-      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::login'
+      operationId: 34d0b1a967eb330a2bbd525c81a39e09
       requestBody:
         description: 'User credentials'
         content:
@@ -32,10 +32,8 @@ paths:
             schema:
               properties:
                 email:
-                  description: 'Gets a JWT via given credentials'
                   type: string
                 password:
-                  description: 'Gets a JWT via given credentials'
                   type: string
               type: object
       responses:
@@ -57,7 +55,7 @@ paths:
         - Auth
       summary: 'Invalidates the token'
       description: 'Logs out a user and invalidates the JWT token'
-      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::logout'
+      operationId: d0d7d8d2137a2c33c9c669ea1a811f65
       responses:
         '200':
           description: 'Logout message'
@@ -65,7 +63,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  message: { description: 'Invalidates the token', type: string }
+                  message: { type: string }
                 type: object
         '401':
           description: Unauthorized
@@ -77,7 +75,7 @@ paths:
         - Auth
       summary: 'Refreshes a token'
       description: 'Refresh the JWT Token, invalidating the old one and generating a new one'
-      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::refresh'
+      operationId: 77dd359a393b3d4fc328bd2b78c35153
       responses:
         '200':
           description: 'The new JWT Token'
@@ -99,7 +97,7 @@ paths:
         - 'Logged User Info'
       summary: 'Gets the authenticated user'
       description: 'Gets the logged User'
-      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::loggedUser'
+      operationId: b5e78dc6c5e7de4ffe51ec1b4a19153b
       responses:
         '200':
           description: 'The logged user info'
@@ -107,7 +105,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  user: { description: 'Gets the authenticated user', properties: { id: { description: 'Gets the authenticated user', type: integer }, uuid: { description: 'Gets the authenticated user', type: string }, name: { description: 'Gets the authenticated user', type: string }, email: { description: 'Gets the authenticated user', type: string }, active: { description: 'Gets the authenticated user', type: boolean }, role_id: { description: 'Gets the authenticated user', type: integer }, settings: { description: 'Gets the authenticated user', type: object }, last_login: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string }, is_admin: { description: 'Gets the authenticated user', type: boolean }, is_manager: { description: 'Gets the authenticated user', type: boolean }, is_user: { description: 'Gets the authenticated user', type: boolean }, is_viewer: { description: 'Gets the authenticated user', type: boolean }, role_label: { description: 'Gets the authenticated user', type: string }, role: { description: 'Gets the authenticated user', properties: { id: { description: 'Gets the authenticated user', type: integer }, name: { description: 'Gets the authenticated user', type: string }, created_at: { description: 'Gets the authenticated user', type: string }, updated_at: { description: 'Gets the authenticated user', type: string } }, type: object } }, type: object }
+                  user: { properties: { id: { type: integer }, uuid: { type: string }, name: { type: string }, email: { type: string }, active: { type: boolean }, role_id: { type: integer }, settings: { type: object }, last_login: { type: string }, created_at: { type: string }, updated_at: { type: string }, is_admin: { type: boolean }, is_manager: { type: boolean }, is_user: { type: boolean }, is_viewer: { type: boolean }, role_label: { type: string }, role: { properties: { id: { type: integer }, name: { type: string }, created_at: { type: string }, updated_at: { type: string } }, type: object } }, type: object }
                 type: object
         '401':
           description: Unauthorized
@@ -119,7 +117,7 @@ paths:
         - 'Logged User Info'
       summary: 'Gets the authenticated user allowed roles'
       description: 'Gets the logged User allowed roles'
-      operationId: 'LarAPI\Modules\Auth\Controllers\AuthController::loggedUserRoles'
+      operationId: fb387edeacbb76c9719ca8e454784995
       responses:
         '200':
           description: 'The logged user allowed roles'
@@ -128,7 +126,7 @@ paths:
               schema:
                 type: array
                 items:
-                  properties: { id: { description: 'Gets the authenticated user allowed roles', type: integer }, name: { description: 'Gets the authenticated user allowed roles', type: string }, created_at: { description: 'Gets the authenticated user allowed roles', type: string }, updated_at: { description: 'Gets the authenticated user allowed roles', type: string } }
+                  properties: { id: { type: integer }, name: { type: string }, created_at: { type: string }, updated_at: { type: string } }
                   type: object
         '401':
           description: Unauthorized
@@ -140,7 +138,7 @@ paths:
         - 'Users Management'
       summary: 'Gets the list of users'
       description: 'Gets the list of users'
-      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::index'
+      operationId: 5645cb972ce7339b915a65f7d7c09dde
       parameters:
         -
           name: page
@@ -183,8 +181,8 @@ paths:
             application/json:
               schema:
                 properties:
-                  data: { description: 'Gets the list of users', type: array, items: { properties: { id: { description: 'Gets the list of users', type: integer }, uuid: { description: 'Gets the list of users', type: string }, name: { description: 'Gets the list of users', type: string }, email: { description: 'Gets the list of users', type: string }, active: { description: 'Gets the list of users', type: boolean }, role_id: { description: 'Gets the list of users', type: integer }, settings: { description: 'Gets the list of users', type: object }, last_login: { description: 'Gets the list of users', type: string }, created_at: { description: 'Gets the list of users', type: string }, updated_at: { description: 'Gets the list of users', type: string }, is_admin: { description: 'Gets the list of users', type: boolean }, is_manager: { description: 'Gets the list of users', type: boolean }, is_user: { description: 'Gets the list of users', type: boolean }, is_viewer: { description: 'Gets the list of users', type: boolean }, role_label: { description: 'Gets the list of users', type: string }, role: { description: 'Gets the list of users', properties: { id: { description: 'Gets the list of users', type: integer }, name: { description: 'Gets the list of users', type: string }, created_at: { description: 'Gets the list of users', type: string }, updated_at: { description: 'Gets the list of users', type: string } }, type: object } }, type: object } }
-                  pagination: { description: 'Gets the list of users', properties: { page_count: { description: 'Gets the list of users', type: integer }, total: { description: 'The filtered total count', type: integer }, total_all: { description: 'The unfiltered total count', type: integer } }, type: object }
+                  data: { type: array, items: { properties: { id: { type: integer }, uuid: { type: string }, name: { type: string }, email: { type: string }, active: { type: boolean }, role_id: { type: integer }, settings: { type: object }, last_login: { type: string }, created_at: { type: string }, updated_at: { type: string }, is_admin: { type: boolean }, is_manager: { type: boolean }, is_user: { type: boolean }, is_viewer: { type: boolean }, role_label: { type: string }, role: { properties: { id: { type: integer }, name: { type: string }, created_at: { type: string }, updated_at: { type: string } }, type: object } }, type: object } }
+                  pagination: { properties: { page_count: { type: integer }, total: { description: 'The filtered total count', type: integer }, total_all: { description: 'The unfiltered total count', type: integer } }, type: object }
                 type: object
         '400':
           description: 'Invalid Request'
@@ -201,7 +199,7 @@ paths:
         - 'Users Management'
       summary: 'Creates a new user'
       description: 'Creates a new user'
-      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::create'
+      operationId: af74cf6a83b5fd3f8504dfab32c67fcb
       requestBody:
         description: 'Info needed to create a new user'
         content:
@@ -214,23 +212,18 @@ paths:
                 - password_confirmation
               properties:
                 name:
-                  description: 'Creates a new user'
                   type: string
                 email:
-                  description: 'Creates a new user'
                   type: string
                 password:
                   description: 'Must contain at least one lowercase letter, one uppercase letter, one number and one special character'
                   type: string
                 password_confirmation:
-                  description: 'Creates a new user'
                   type: string
                 active:
-                  description: 'Creates a new user'
                   type: boolean
                   default: true
                 role_id:
-                  description: 'Creates a new user'
                   type: integer
                   default: 3
               type: object
@@ -241,7 +234,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  success: { description: 'Creates a new user', type: boolean }
+                  success: { type: boolean }
                 type: object
         '400':
           description: 'Invalid Request'
@@ -259,7 +252,7 @@ paths:
         - 'Users Management'
       summary: 'Gets the info of a specific user'
       description: 'Gets the info of a specific user'
-      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::show'
+      operationId: 03eb3f42821714d8aec3558719009b42
       parameters:
         -
           name: uuid
@@ -274,22 +267,22 @@ paths:
             application/json:
               schema:
                 properties:
-                  id: { description: 'Gets the info of a specific user', type: integer }
-                  uuid: { description: 'Gets the info of a specific user', type: string }
-                  name: { description: 'Gets the info of a specific user', type: string }
-                  email: { description: 'Gets the info of a specific user', type: string }
-                  active: { description: 'Gets the info of a specific user', type: boolean }
-                  role_id: { description: 'Gets the info of a specific user', type: integer }
-                  settings: { description: 'Gets the info of a specific user', type: object }
-                  last_login: { description: 'Gets the info of a specific user', type: string }
-                  created_at: { description: 'Gets the info of a specific user', type: string }
-                  updated_at: { description: 'Gets the info of a specific user', type: string }
-                  is_admin: { description: 'Gets the info of a specific user', type: boolean }
-                  is_manager: { description: 'Gets the info of a specific user', type: boolean }
-                  is_user: { description: 'Gets the info of a specific user', type: boolean }
-                  is_viewer: { description: 'Gets the info of a specific user', type: boolean }
-                  role_label: { description: 'Gets the info of a specific user', type: string }
-                  role: { description: 'Gets the info of a specific user', properties: { id: { description: 'Gets the info of a specific user', type: integer }, name: { description: 'Gets the info of a specific user', type: string }, created_at: { description: 'Gets the info of a specific user', type: string }, updated_at: { description: 'Gets the info of a specific user', type: string } }, type: object }
+                  id: { type: integer }
+                  uuid: { type: string }
+                  name: { type: string }
+                  email: { type: string }
+                  active: { type: boolean }
+                  role_id: { type: integer }
+                  settings: { type: object }
+                  last_login: { type: string }
+                  created_at: { type: string }
+                  updated_at: { type: string }
+                  is_admin: { type: boolean }
+                  is_manager: { type: boolean }
+                  is_user: { type: boolean }
+                  is_viewer: { type: boolean }
+                  role_label: { type: string }
+                  role: { properties: { id: { type: integer }, name: { type: string }, created_at: { type: string }, updated_at: { type: string } }, type: object }
                 type: object
         '400':
           description: 'Invalid Request'
@@ -306,7 +299,7 @@ paths:
         - 'Users Management'
       summary: 'Updates the info of a specific user'
       description: 'Updates the info of a specific user'
-      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::update'
+      operationId: 5caf79b05a6aa475e8e2939066866b05
       requestBody:
         description: 'Info needed to update the user info'
         content:
@@ -316,19 +309,15 @@ paths:
                 - name
               properties:
                 name:
-                  description: 'Updates the info of a specific user'
                   type: string
                 password:
                   description: 'Must contain at least one lowercase letter, one uppercase letter, one number and one special character'
                   type: string
                 password_confirmation:
-                  description: 'Updates the info of a specific user'
                   type: string
                 active:
-                  description: 'Updates the info of a specific user'
                   type: boolean
                 role_id:
-                  description: 'Updates the info of a specific user'
                   type: integer
               type: object
       responses:
@@ -338,7 +327,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  success: { description: 'Updates the info of a specific user', type: boolean }
+                  success: { type: boolean }
                 type: object
         '400':
           description: 'Invalid Request'
@@ -355,7 +344,7 @@ paths:
         - 'Users Management'
       summary: 'Deletes a specific user'
       description: 'Deletes a specific user'
-      operationId: 'LarAPI\Modules\Auth\Controllers\UserController::delete'
+      operationId: 1a55ef8162ba4820b0cd5bff160f79f0
       parameters:
         -
           name: uuid
@@ -370,7 +359,7 @@ paths:
             application/json:
               schema:
                 properties:
-                  success: { description: 'Deletes a specific user', type: boolean }
+                  success: { type: boolean }
                 type: object
         '400':
           description: 'Invalid Request'
