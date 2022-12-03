@@ -35,6 +35,32 @@ Configure your local Virtual Host. After that visit the host URL and you will se
     "status": 200
 }
 ```
+## Configuring the project with Docker
+
+### Steps of build
+
+sudo docker compose -f stack-ubuntu-local.yaml up -d --build # For Ubuntu
+
+sudo docker compose -f stack-rhel-local.yaml up -d --build # For RHEL
+
+sudo docker exec php composer new-install
+sudo docker exec php composer set-permissions
+
+### Running Migrations
+sudo docker exec php php artisan migrate
+
+##  Configuring the project with Podman
+
+### Steps of build
+
+sudo podman-compose -f stack-ubuntu-local.yaml up -d --build # For Ubuntu
+sudo podman-compose -f stack-rhel-local.yaml up -d --build # For RHEL
+
+sudo podman exec php composer new-install
+sudo podman exec php composer set-permissions
+
+### Running Migrations
+sudo podman exec php php artisan migrate
 
 ## App Architecture
 

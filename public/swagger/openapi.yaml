@@ -164,7 +164,7 @@ paths:
                 description: 'Field name to use in sort'
                 type: string
               order:
-                description: 'Order: ''asc'' or ''desc'''
+                description: "Order: 'asc' or 'desc'"
                 type: string
             type: object
         -

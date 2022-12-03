@@ -14,3 +14,5 @@ yarn-error.log
 cghooks.lock
 .idea/*
 
+# Docker
+/docker/data
