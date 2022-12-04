@@ -22,7 +22,6 @@ services:
       - MYSQL_PASSWORD=larapi
       - MYSQL_DATABASE=larapi
 
-
   redis:
     image: redis:latest
     container_name: redis
