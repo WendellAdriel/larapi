@@ -110,6 +110,6 @@
         "cghooks": "./vendor/bin/cghooks",
         "lint": "./vendor/bin/php-cs-fixer fix ./app --using-cache=false --rules=@PSR2",
         "lint:check": "./vendor/bin/php-cs-fixer fix ./app --using-cache=false --dry-run --rules=@PSR2",
-        "tests": "php artisan test --do-not-cache-result"        
+        "tests": "php artisan test --do-not-cache-result"
     }
 }
