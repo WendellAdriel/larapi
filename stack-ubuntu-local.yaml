@@ -18,6 +18,8 @@ services:
       - SERVICE_TAGS=dev
       - SERVICE_NAME=mysql
       - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_USER=larapi
+      - MYSQL_PASSWORD=larapi
       - MYSQL_DATABASE=larapi
 
   redis:
